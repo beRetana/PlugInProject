@@ -1,0 +1,25 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "AssetVerifier",
+	"Description": "Verifies Assets",
+	"Category": "Other",
+	"CreatedBy": "Brandon Retana",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"EnabledByDefault": true,
+	"CanContainContent": true,
+	"IsBetaVersion": true,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "AssetVerifier",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
+		}
+	]
+}

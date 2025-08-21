@@ -1,0 +1,9 @@
+{
+	"SourceFiles": [
+		"C:\\Users\\breta\\Downloads\\Proyectos_Personales\\Unreal\\PlugInProject\\Source\\PlugInProject\\PlugInProject.Build.cs",
+		"C:\\Users\\breta\\Downloads\\Proyectos_Personales\\Unreal\\PlugInProject\\Plugins\\AssetVerifier\\Source\\AssetVerifier\\AssetVerifier.Build.cs",
+		"C:\\Users\\breta\\Downloads\\Proyectos_Personales\\Unreal\\PlugInProject\\Source\\PlugInProject.Target.cs",
+		"C:\\Users\\breta\\Downloads\\Proyectos_Personales\\Unreal\\PlugInProject\\Source\\PlugInProjectEditor.Target.cs"
+	],
+	"EngineVersion": "5.6.0"
+}

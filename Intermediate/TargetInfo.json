@@ -1,0 +1,14 @@
+{
+	"Targets": [
+		{
+			"Name": "PlugInProject",
+			"Path": "..\\Source\\PlugInProject.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "PlugInProjectEditor",
+			"Path": "..\\Source\\PlugInProjectEditor.Target.cs",
+			"Type": "Editor"
+		}
+	]
+}
