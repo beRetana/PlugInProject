@@ -1,3 +1,4 @@
+#pragma once
 
 class IAssetRegistry; // Forward declaration since we are using it in the class declaration
 
@@ -5,13 +6,13 @@ class FAssetScopeBuilder
 {
 public:
 
-	static TArray<FAssetData> BuildScopeAll(const FARFilter& Filter = FARFilter());
-	static TArray<FAssetData> BuildScopeSelected(const FARFilter& Filter = FARFilter());
-	static TArray<FAssetData> BuildScopeFolder(const FARFilter& Filter = FARFilter());
+	static TArray<FAssetData> BuildScopeAll();
+	static TArray<FAssetData> BuildScopeSelected();
+	static TArray<FAssetData> BuildScopeFolder(const TArray<FName>& FoldersPaths);
 
-	static FARFilter MakeFilterScopeAll(const FARFilter& = FARFilter());
-	static FARFilter MakeFilterScopeSelected(const FARFilter& = FARFilter());
-	static FARFilter MakeFilterScopeFolders(const TArray<FName>& FoldersPaths, const FARFilter& = FARFilter());
+	static FARFilter MakeFilterScopeAll();
+	static FARFilter MakeFilterScopeSelected();
+	static FARFilter MakeFilterScopeFolders(const TArray<FName>& FoldersPaths);
 
 	static void QueryAssets(const FARFilter& Filter, TArray<FAssetData>& OutAssets);
 	static TArray<FAssetData> QueryAssets(const FARFilter& Filter);

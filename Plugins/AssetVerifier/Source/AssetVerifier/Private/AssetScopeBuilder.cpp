@@ -19,12 +19,12 @@ IAssetRegistry& FAssetScopeBuilder::GetAssetRegistry()
 /// </summary>
 /// <param name="Filter"></param>
 /// <returns>FARFilter</returns>
-FARFilter FAssetScopeBuilder::MakeFilterScopeAll(const FARFilter& Filter)
+FARFilter FAssetScopeBuilder::MakeFilterScopeAll()
 {
-	FARFilter NewFilter = Filter;
-	NewFilter.PackagePaths.Add(GAME_ROOT_PATH);
-	NewFilter.bRecursivePaths = true;
-	return NewFilter;
+	FARFilter Filter;
+	Filter.PackagePaths.Add(GAME_ROOT_PATH);
+	Filter.bRecursivePaths = true;
+	return Filter;
 }
 
 /// <summary>
@@ -33,12 +33,12 @@ FARFilter FAssetScopeBuilder::MakeFilterScopeAll(const FARFilter& Filter)
 /// <param name="FoldersPaths"></param>
 /// <param name="Filter"></param>
 /// <returns>FARFilter</returns>
-FARFilter FAssetScopeBuilder::MakeFilterScopeFolders(const TArray<FName>& FoldersPaths, const FARFilter& Filter)
+FARFilter FAssetScopeBuilder::MakeFilterScopeFolders(const TArray<FName>& FoldersPaths)
 {
-	FARFilter NewFilter = Filter;
-	NewFilter.PackagePaths.Append(FoldersPaths);
-	NewFilter.bRecursivePaths = true;
-	return NewFilter;
+	FARFilter Filter;
+	Filter.PackagePaths.Append(FoldersPaths);
+	Filter.bRecursivePaths = true;
+	return Filter;
 }
 
 /// <summary>
@@ -46,10 +46,10 @@ FARFilter FAssetScopeBuilder::MakeFilterScopeFolders(const TArray<FName>& Folder
 /// </summary>
 /// <param name="Filter"></param>
 /// <returns>FARFilter</returns>
-FARFilter FAssetScopeBuilder::MakeFilterScopeSelected(const FARFilter& Filter)
+FARFilter FAssetScopeBuilder::MakeFilterScopeSelected()
 {
-	FARFilter NewFilter = Filter;
-	NewFilter.bRecursivePaths = true;
+	FARFilter Filter;
+	Filter.bRecursivePaths = true;
 
 	FContentBrowserModule& ContentBrowserModule = FModuleManager::LoadModuleChecked<FContentBrowserModule>(CONTENT_BROSER);
 	TArray<FString> SelectedPaths;
@@ -57,7 +57,7 @@ FARFilter FAssetScopeBuilder::MakeFilterScopeSelected(const FARFilter& Filter)
 
 	for (const FString& Path : SelectedPaths)
 	{
-		NewFilter.PackagePaths.Add(FName(*Path));
+		Filter.PackagePaths.Add(FName(*Path));
 	}
 
 	TArray<FAssetData> SelectedAssets;
@@ -65,10 +65,10 @@ FARFilter FAssetScopeBuilder::MakeFilterScopeSelected(const FARFilter& Filter)
 
 	for (const FAssetData& AssetPath : SelectedAssets)
 	{
-		NewFilter.SoftObjectPaths.Add(AssetPath.GetSoftObjectPath());
+		Filter.SoftObjectPaths.Add(AssetPath.GetSoftObjectPath());
 	}
 
-	return NewFilter;
+	return Filter;
 }
 
 /// <summary>
@@ -78,7 +78,7 @@ FARFilter FAssetScopeBuilder::MakeFilterScopeSelected(const FARFilter& Filter)
 void FAssetScopeBuilder::QueryAssets(const FARFilter& Filter, TArray<FAssetData>& OutAssets)
 {
 	OutAssets.Reset();
-	GetAssetRegistry().GetAssets(Filter, OutAssets);
+	GetAssetRegistry().GetAssets(Filter, OutAssets, false);
 }
 
 /// <summary>
@@ -98,10 +98,10 @@ TArray<FAssetData> FAssetScopeBuilder::QueryAssets(const FARFilter& Filter)
 /// </summary>
 /// <param name="Filter"></param>
 /// <returns>TArray<FAssetData></returns>
-TArray<FAssetData> FAssetScopeBuilder::BuildScopeAll(const FARFilter& Filter)
+TArray<FAssetData> FAssetScopeBuilder::BuildScopeAll()
 {
 	TArray<FAssetData> Assets;
-	QueryAssets(MakeFilterScopeAll(Filter), Assets);
+	QueryAssets(MakeFilterScopeAll(), Assets);
 	return Assets;
 }
 
@@ -110,10 +110,10 @@ TArray<FAssetData> FAssetScopeBuilder::BuildScopeAll(const FARFilter& Filter)
 /// </summary>
 /// <param name="Filter"></param>
 /// <returns>TArray<FAssetData></returns>
-TArray<FAssetData> FAssetScopeBuilder::BuildScopeFolder(const FARFilter& Filter)
+TArray<FAssetData> FAssetScopeBuilder::BuildScopeFolder(const TArray<FName>& FoldersPaths)
 {
 	TArray<FAssetData> Assets;
-	QueryAssets(MakeFilterScopeFolders(Filter.PackagePaths, Filter), Assets);
+	QueryAssets(MakeFilterScopeFolders(FoldersPaths), Assets);
 	return Assets;
 }
 
@@ -122,9 +122,9 @@ TArray<FAssetData> FAssetScopeBuilder::BuildScopeFolder(const FARFilter& Filter)
 /// </summary>
 /// <param name="Filter"></param>
 /// <returns>TArray<FAssetData></returns>
-TArray<FAssetData> FAssetScopeBuilder::BuildScopeSelected(const FARFilter& Filter)
+TArray<FAssetData> FAssetScopeBuilder::BuildScopeSelected()
 {
 	TArray<FAssetData> Assets;
-	QueryAssets(MakeFilterScopeSelected(Filter), Assets);
+	QueryAssets(MakeFilterScopeSelected(), Assets);
 	return Assets;
 }

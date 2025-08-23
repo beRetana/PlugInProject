@@ -17,7 +17,7 @@
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 
 // ********** Begin ScriptStruct FAssetValidationData **********************************************
-#define FID_Users_breta_Downloads_Proyectos_Personales_Unreal_PlugInProject_Plugins_AssetVerifier_Source_AssetVerifier_Public_AssetValidationData_h_19_GENERATED_BODY \
+#define FID_Users_breta_Downloads_Proyectos_Personales_Unreal_PlugInProject_Plugins_AssetVerifier_Source_AssetVerifier_Public_AssetValidationData_h_17_GENERATED_BODY \
 	friend struct Z_Construct_UScriptStruct_FAssetValidationData_Statics; \
 	static class UScriptStruct* StaticStruct();
 
@@ -26,7 +26,7 @@ struct FAssetValidationData;
 // ********** End ScriptStruct FAssetValidationData ************************************************
 
 // ********** Begin ScriptStruct FValidationReportSummary ******************************************
-#define FID_Users_breta_Downloads_Proyectos_Personales_Unreal_PlugInProject_Plugins_AssetVerifier_Source_AssetVerifier_Public_AssetValidationData_h_51_GENERATED_BODY \
+#define FID_Users_breta_Downloads_Proyectos_Personales_Unreal_PlugInProject_Plugins_AssetVerifier_Source_AssetVerifier_Public_AssetValidationData_h_43_GENERATED_BODY \
 	friend struct Z_Construct_UScriptStruct_FValidationReportSummary_Statics; \
 	static class UScriptStruct* StaticStruct();
 
@@ -35,7 +35,7 @@ struct FValidationReportSummary;
 // ********** End ScriptStruct FValidationReportSummary ********************************************
 
 // ********** Begin ScriptStruct FAssetValidationReport ********************************************
-#define FID_Users_breta_Downloads_Proyectos_Personales_Unreal_PlugInProject_Plugins_AssetVerifier_Source_AssetVerifier_Public_AssetValidationData_h_74_GENERATED_BODY \
+#define FID_Users_breta_Downloads_Proyectos_Personales_Unreal_PlugInProject_Plugins_AssetVerifier_Source_AssetVerifier_Public_AssetValidationData_h_66_GENERATED_BODY \
 	friend struct Z_Construct_UScriptStruct_FAssetValidationReport_Statics; \
 	static class UScriptStruct* StaticStruct();
 

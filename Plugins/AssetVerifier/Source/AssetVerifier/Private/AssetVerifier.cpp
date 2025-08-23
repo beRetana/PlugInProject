@@ -2,6 +2,7 @@
 
 #include "AssetVerifier.h"
 #include "ValidatorManager.h"
+#include "Reporting/AssetReportGenerator.h"
 #include "AssetValidationData.h"
 #include "AssetScopeBuilder.h"
 #include "AssetVerifierCommands.h"
@@ -141,6 +142,9 @@ void FAssetVerifier::RunValidator(const FName& ValidatorName)
 	TArray<FAssetValidationData> ValidationData;
 	TArray<FAssetData> Assets = FAssetScopeBuilder::BuildScopeAll();
 	ValidatorManager->ExecuteValidator(ValidatorName, Assets, ValidationData);
+	FAssetValidationReport Report = FAssetReportGenerator::GenerateReport(ValidationData);
+	bool bWasCSVSaved = FAssetReportGenerator::SaveSmallReportToCSVFile(Report);
+	UE_LOG(LogTemp, Log, TEXT("Was the CSV Successfully Saved? %s"), bWasCSVSaved ? TEXT("true") : TEXT("false"));
 }
 
 /// <summary>

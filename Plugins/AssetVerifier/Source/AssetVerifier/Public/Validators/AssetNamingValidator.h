@@ -21,7 +21,7 @@ public:
 
 	virtual void ChangeConvention(const FString& NewConvention);
 
-	virtual FString GetValidatorName() const override;
+	virtual FName GetValidatorName() const override;
 
 	static const TCHAR* ASSET_REGISTRY;
 

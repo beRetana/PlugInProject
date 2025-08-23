@@ -12,16 +12,14 @@ void FAssetNamingValidator::Validate(TArray<FAssetData>& Assets, TArray<FAssetVa
 {
 	UE_LOG(LogTemp, Log, TEXT("Checking For Naming Convention On Static Meshes: %s"), *NameConventionPrefix);
 	
-	FARFilter Filter = FARFilter();
-	Filter.ClassPaths.Empty();
-	Filter.ClassPaths.Add(UStaticMesh::StaticClass()->GetClassPathName());
-	FAssetScopeBuilder::QueryAssets(Filter, Assets);
+	FString StaticClassName = UStaticMesh::StaticClass()->GetClassPathName().ToString();
 
 	InvalidAssetsNum = 0;
 	CheckedAssetsNum = 0;
 
 	for (const FAssetData& asset : Assets)
 	{
+		if (asset.AssetClassPath.ToString() != StaticClassName || !asset.IsTopLevelAsset()) continue;
 		FAssetValidationData ValidationData;
 		FillValidationData(ValidationData, asset);
 		OutValidationData.Add(ValidationData);
@@ -37,31 +35,33 @@ void FAssetNamingValidator::Validate(TArray<FAssetData>& Assets, TArray<FAssetVa
 
 void FAssetNamingValidator::FillValidationData(FAssetValidationData& OutValidationData, const FAssetData& Asset)
 {
-	OutValidationData.AssetName = Asset.AssetName.ToString();
+	OutValidationData.AssetName = Asset.AssetName;
 	OutValidationData.AssetPath = Asset.GetObjectPathString();
 	OutValidationData.ValidatorName = GetValidatorName();
 	++CheckedAssetsNum;
 
-	if (OutValidationData.AssetName.StartsWith(NameConventionPrefix))
+	FString AssetNameStr = Asset.AssetName.ToString();
+
+	if (AssetNameStr.StartsWith(NameConventionPrefix))
 	{
 		OutValidationData.Result = EValidationResult::Passed;
 		OutValidationData.Message = FString::Printf(
 			TEXT("Asset %s follows naming convention: %s"),
-			*OutValidationData.AssetName, 
+			*AssetNameStr,
 			*NameConventionPrefix);
 		return;
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("The Asset %s does not follow naming convention: %s"), 
-			*OutValidationData.AssetName,
+			*AssetNameStr,
 			*NameConventionPrefix);
 		
 		++InvalidAssetsNum;
 		OutValidationData.Result = EValidationResult::Error;
 		OutValidationData.Message = FString::Printf(
 			TEXT("Asset %s does not follow the naming convention: %s"), 
-			*OutValidationData.AssetName, 
+			*AssetNameStr,
 			*NameConventionPrefix);
 	}
 }
@@ -82,9 +82,9 @@ void FAssetNamingValidator::ChangeConvention(const FString& NewConvention)
 	NameConventionPrefix = NewConvention;
 }
 
-FString FAssetNamingValidator::GetValidatorName() const
+FName FAssetNamingValidator::GetValidatorName() const
 {
-	return FString(VALIDATOR_NAME);
+	return FName(VALIDATOR_NAME);
 }
 
 #undef LOCTEXT_NAMESPACE

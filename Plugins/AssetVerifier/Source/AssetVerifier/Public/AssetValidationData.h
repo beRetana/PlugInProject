@@ -1,7 +1,5 @@
 #pragma once
 
-#include "CoreMinimal.h"
-
 #include "AssetValidationData.generated.h"
 
 UENUM(BlueprintType)
@@ -19,13 +17,13 @@ struct ASSETVERIFIER_API FAssetValidationData
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadOnly, Category = "Validation Data")
-	FString AssetName;
+	FName AssetName;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Validation Data")
 	FString AssetPath;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Validation Data")
-	FString ValidatorName;
+	FName ValidatorName;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Validation Data")
 	EValidationResult Result;
@@ -34,15 +32,9 @@ struct ASSETVERIFIER_API FAssetValidationData
 	FString Message;
 
 
-	FAssetValidationData(const FString& InAssetName, const FString& InAssetPath, const FString& InValidatorName, EValidationResult InResult, const FString& InMessage)
-		: AssetName(InAssetName)
-		, AssetPath(InAssetPath)
-		, ValidatorName(InValidatorName)
-		, Result(InResult)
-		, Message(InMessage)
-	{}
-
-	FAssetValidationData(){};
+	FAssetValidationData() : Result(EValidationResult::Passed)
+	{
+	}
 };
 
 USTRUCT(BlueprintType)
@@ -51,19 +43,19 @@ struct ASSETVERIFIER_API FValidationReportSummary
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadOnly, Category = "Validation Report Summary")
-	int32 TotalAssets;
+	int32 TotalAssets{0};
 
 	UPROPERTY(BlueprintReadOnly, Category = "Validation Report Summary")
-	int32 Passed;
+	int32 Passed{0};
 
 	UPROPERTY(BlueprintReadOnly, Category = "Validation Report Summary")
-	int32 Errors;
+	int32 Errors{0};
 
 	UPROPERTY(BlueprintReadOnly, Category = "Validation Report Summary")
-	int32 Warnings;
+	int32 Warnings{0};
 
 	UPROPERTY(BlueprintReadOnly, Category = "Validation Report Summary")
-	int32 Information;
+	int32 Information{0};
 
 	FValidationReportSummary() = default;
 };
