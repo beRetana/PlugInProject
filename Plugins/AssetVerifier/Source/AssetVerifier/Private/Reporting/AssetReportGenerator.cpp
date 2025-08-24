@@ -1,13 +1,13 @@
 
 #include "AssetReportGenerator.h"
 
-void FAssetReportGenerator::GenerateReport(const TArray<FAssetValidationData>& ValidationData, FAssetValidationReport& ReportOut)
+void FAssetReportGenerator::GenerateReport(TArray<FAssetValidationData>& ValidationData, FAssetValidationReport& ReportOut)
 {
-	ReportOut.ValidationData = ValidationData;
+	ReportOut.ValidationData = MoveTemp(ValidationData);
 	ReportOut.ErrorCountPerAsset.Empty();
 	ReportOut.ErrorCountPerValidator.Empty();
 
-	for (auto issueData : ValidationData)
+	for (auto issueData : ReportOut.ValidationData)
 	{
 		if (!ReportOut.ErrorCountPerAsset.Contains(issueData.AssetName))
 		{
@@ -41,7 +41,7 @@ void FAssetReportGenerator::GenerateReport(const TArray<FAssetValidationData>& V
 	ReportOut.Summary.TotalAssets = ReportOut.ErrorCountPerAsset.Num();
 }
 
-FAssetValidationReport FAssetReportGenerator::GenerateReport(const TArray<FAssetValidationData>& ValidationData)
+FAssetValidationReport FAssetReportGenerator::GenerateReport(TArray<FAssetValidationData>& ValidationData)
 {
 	FAssetValidationReport Report;
 	GenerateReport(ValidationData, Report);
@@ -81,7 +81,7 @@ void FAssetReportGenerator::GenerateFullReportToCSV(const TArray<FAssetValidatio
 			*Data.AssetName.ToString(),
 			*Data.AssetPath,
 			*Data.ValidatorName.ToString(),
-			*UEnum::GetValueAsString(Data.Result),
+			*EnumResultToString(Data.Result),
 			*Data.Message);
 	}
 }
@@ -154,11 +154,12 @@ void FAssetReportGenerator::GenerateFullReportToJSON(const TArray<FAssetValidati
 	for (int index = 0; index < ValidationData.Num(); ++index)
 	{
 		const auto& row = ValidationData[index];
+
 		OutJSON += TEXT("\t\t\t{\n");
 		OutJSON += FString::Printf(TEXT("\t\t\t\t\"AssetName\": \"%s\",\n"), *row.AssetName.ToString());
 		OutJSON += FString::Printf(TEXT("\t\t\t\t\"AssetPath\": \"%s\",\n"), *row.AssetPath);
 		OutJSON += FString::Printf(TEXT("\t\t\t\t\"ValidatorName\": \"%s\",\n"), *row.ValidatorName.ToString());
-		OutJSON += FString::Printf(TEXT("\t\t\t\t\"Result\": \"%s\",\n"), *UEnum::GetValueAsString(row.Result));
+		OutJSON += FString::Printf(TEXT("\t\t\t\t\"Result\": \"%s\",\n"), *EnumResultToString(row.Result));
 		OutJSON += FString::Printf(TEXT("\t\t\t\t\"Message\": \"%s\"\n"), *row.Message);
 
 		OutJSON += (index < ValidationData.Num() - 1) ? TEXT("\t\t\t},\n") : TEXT("\t\t\t}\n");
@@ -291,9 +292,17 @@ FString FAssetReportGenerator::ToLog(const FAssetValidationReport& Report)
 	return Log;
 }
 
+bool FAssetReportGenerator::StreamSmallReportToLog(const FAssetValidationReport& Report)
+{
+	FString Log;
+	ToLog(Report, Log);
+	UE_LOG(LogTemp, Log, TEXT("%s"), *Log);
+	return true;
+}
+
 bool FAssetReportGenerator::SaveSmallReportToCSVFile(const FAssetValidationReport& Report)
 {
-	FString Directory = FPaths::ProjectSavedDir() / TEXT("Reports");
+	FString Directory = FPaths::ProjectSavedDir() / TEXT("Reports/CSVs");
 
 	if (!IFileManager::Get().MakeDirectory(*Directory, true))
 	{
@@ -345,9 +354,34 @@ bool FAssetReportGenerator::SaveStringAtomicallyToFile(const FString& Content, c
 	return true;
 }
 
-bool FAssetReportGenerator::SaveReportToJSONFile(const FAssetValidationReport& Report, const FString& FilePath)
+bool FAssetReportGenerator::SaveSmallReportToJSONFile(const FAssetValidationReport& Report)
 {
+	FString Directory = FPaths::ProjectSavedDir() / TEXT("Reports/JSONs");
+
+	if (!IFileManager::Get().MakeDirectory(*Directory, true))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to create directory: %s"), *Directory);
+		return false;
+	}
+
 	FString JSON;
 	ToJSON(Report, JSON);
-	return FFileHelper::SaveStringToFile(JSON, *FilePath);
+	return SaveStringAtomicallyToFile(JSON, Directory / TEXT("ValidationReport.json"));
+}
+
+FString FAssetReportGenerator::EnumResultToString(EValidationResult Result)
+{
+	switch (Result)
+	{
+		case EValidationResult::Passed:
+			return TEXT("Passed");
+		case EValidationResult::Information:
+			return TEXT("Information");
+		case EValidationResult::Warning:
+			return TEXT("Warning");
+		case EValidationResult::Error:
+			return TEXT("Error");
+		default:
+			return TEXT("Unknown");
+	}
 }

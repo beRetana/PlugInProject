@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "AssetValidationData.h"
+
 class FAssetVerifier : public IModuleInterface
 {
 public:
@@ -18,6 +20,7 @@ private:
 	void SetUpDependencies();
 	void MapCommands();
 	void SetUpUI();
+	void ShowReportWindow(const FAssetValidationReport& Report, double TimeElapsed);
 	void OpenSettingsWindow();
 	void RunValidator(const FName& ValidatorName);
 	void PopulateCommands(UToolMenu* InMenu);
@@ -26,6 +29,8 @@ private:
 	TSharedPtr<class FValidatorManager> ValidatorManager;
 	TSharedPtr<class FAssetVerifierSettings> VerifierSettings;
 	TSharedPtr<class SWindow> SettingsWindowUI;
+	
+	FAssetValidationReport LastReport;
 
 	FName StaticMeshNaming = TEXT("StaticMeshNamingValidator");
 };

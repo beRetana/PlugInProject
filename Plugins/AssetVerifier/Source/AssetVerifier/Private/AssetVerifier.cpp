@@ -6,7 +6,8 @@
 #include "AssetValidationData.h"
 #include "AssetScopeBuilder.h"
 #include "AssetVerifierCommands.h"
-#include "AssetVerifierSettingsWindow.h"
+#include "UI/AssetVerifierSettingsWindow.h"
+#include "UI/ValidationResultWindow.h"
 #include "AssetVerifierSettings.h"
 #include "Validators/AssetNamingValidator.h"
 
@@ -139,12 +140,12 @@ void FAssetVerifier::ShutdownModule()
 /// </summary>
 void FAssetVerifier::RunValidator(const FName& ValidatorName)
 {
+	double StartTime = FPlatformTime::Seconds();
 	TArray<FAssetValidationData> ValidationData;
 	TArray<FAssetData> Assets = FAssetScopeBuilder::BuildScopeAll();
 	ValidatorManager->ExecuteValidator(ValidatorName, Assets, ValidationData);
-	FAssetValidationReport Report = FAssetReportGenerator::GenerateReport(ValidationData);
-	bool bWasCSVSaved = FAssetReportGenerator::SaveSmallReportToCSVFile(Report);
-	UE_LOG(LogTemp, Log, TEXT("Was the CSV Successfully Saved? %s"), bWasCSVSaved ? TEXT("true") : TEXT("false"));
+	FAssetReportGenerator::GenerateReport(ValidationData, LastReport);
+	ShowReportWindow(LastReport, FPlatformTime::Seconds() - StartTime);
 }
 
 /// <summary>
@@ -174,6 +175,39 @@ void FAssetVerifier::OpenSettingsWindow()
 		.SupportsMinimize(true);
 	
 	FSlateApplication::Get().AddWindow(SettingsWindowUI.ToSharedRef());
+}
+
+void FAssetVerifier::ShowReportWindow(const FAssetValidationReport& Report, double TimeElapsed)
+{
+	FAssetReportGenerator::StreamSmallReportToLog(Report);
+
+	auto SaveToCSV = FSimpleDelegate::CreateLambda([Report]()
+		{
+			FAssetReportGenerator::SaveSmallReportToCSVFile(Report);
+		});
+
+	auto SaveToJSON = FSimpleDelegate::CreateLambda([Report]()
+		{
+			FAssetReportGenerator::SaveSmallReportToJSONFile(Report);
+		});
+
+	auto SaveToLog = FSimpleDelegate::CreateLambda([Report]()
+		{
+			FAssetReportGenerator::StreamSmallReportToLog(Report);
+		});
+
+	TSharedRef<SWindow> ReportWindow = SNew(SWindow)
+		.Title(LOCTEXT("AssetValidationReport", "Asset Validation Report"))
+		.SizingRule(ESizingRule::Autosized)
+		[
+			SNew(SValidationResultWindow).TimeStamp(TimeElapsed)
+				.OnSaveToCSV(SaveToCSV)
+				.OnSaveToJSON(SaveToJSON)
+				.OnStreamToLog(SaveToLog)
+		]
+		.SupportsMaximize(false)
+		.SupportsMinimize(true);
+	FSlateApplication::Get().AddWindow(ReportWindow);
 }
 
 #undef LOCTEXT_NAMESPACE

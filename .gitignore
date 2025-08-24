@@ -361,3 +361,50 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# ----- Unreal/UBT transient -----
+Binaries/
+Intermediate/
+DerivedDataCache/
+Saved/
+.DDC/
+AutomationReport/
+
+# ----- Build/packaging output -----
+Build/
+*.zip
+*.7z
+*.tar
+*.gz
+
+# ----- IDEs -----
+.vs/
+.vscode/
+.idea/
+*.iml
+
+# VS/MSBuild databases & user files
+*.VC.db
+*.VC.opendb
+*.opendb
+*.suo
+*.user
+*.userprefs
+*.ipch
+
+# Xcode/macOS
+*.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+DerivedData/
+
+# ----- Logs / dumps -----
+Saved/Logs/
+*.log
+*.dmp
+*.mdmp
+
+# ----- OS cruft -----
+.DS_Store
+Thumbs.db
+desktop.ini

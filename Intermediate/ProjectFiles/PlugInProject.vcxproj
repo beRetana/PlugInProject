@@ -527,10 +527,6 @@
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\AssetVerifierSettingsWindow.cpp">
-      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
     <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\ValidatorManager.cpp">
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>
@@ -548,6 +544,14 @@
       <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\Reporting\AssetReportGenerator.h"/>
+    <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\UI\AssetVerifierSettingsWindow.cpp">
+      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\UI\ValidationReportWindow.cpp">
+      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
     <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\Validators\AssetFileSizeValidator.cpp">
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>
@@ -566,10 +570,11 @@
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\AssetVerifier.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\AssetVerifierCommands.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\AssetVerifierSettings.h"/>
-    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\AssetVerifierSettingsWindow.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\ValidatorManager.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Fixers\AssetLODFixer.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Fixers\AssetNamingFixer.h"/>
+    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\UI\AssetVerifierSettingsWindow.h"/>
+    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\UI\ValidationResultWindow.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Validators\AssetFileSizeValidator.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Validators\AssetLODValidator.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Validators\AssetNamingValidator.h"/>

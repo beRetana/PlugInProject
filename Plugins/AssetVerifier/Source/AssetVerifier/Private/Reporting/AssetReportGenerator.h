@@ -6,9 +6,9 @@ class FAssetReportGenerator
 {
 public:
 
-	static void GenerateReport(const TArray<FAssetValidationData>& ValidationData, FAssetValidationReport& OutReport);
+	static void GenerateReport(TArray<FAssetValidationData>& ValidationData, FAssetValidationReport& OutReport);
 
-	static FAssetValidationReport GenerateReport(const TArray<FAssetValidationData>& ValidationData);
+	static FAssetValidationReport GenerateReport(TArray<FAssetValidationData>& ValidationData);
 
 	static void ToCSV(const FAssetValidationReport& ValidationData, FString& OutCSV);
 
@@ -24,7 +24,11 @@ public:
 
 	static bool SaveSmallReportToCSVFile(const FAssetValidationReport& Report);
 
-	static bool SaveReportToJSONFile(const FAssetValidationReport& Report, const FString& FilePath);
+	static bool SaveSmallReportToJSONFile(const FAssetValidationReport& Report);
+
+	static bool StreamSmallReportToLog(const FAssetValidationReport& Report);
+
+	static FString EnumResultToString(EValidationResult Result);
 
 private:
 
