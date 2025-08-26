@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "AssetVerifier.h"
-#include "ValidatorManager.h"
+#include "Validators/ValidatorManager.h"
 #include "Reporting/AssetReportGenerator.h"
 #include "AssetValidationData.h"
 #include "AssetScopeBuilder.h"
@@ -104,6 +104,15 @@ void FAssetVerifier::SetUpUI()
 	));
 }
 
+void FAssetVerifier::SetUpValidationData(TArray<TArray<FAssetValidationData>>& OutData)
+{
+	OutData.SetNum(static_cast<int32>(EValidationResult::Error_3) + 1);
+	OutData[static_cast<int32>(EValidationResult::Error_3)]			= TArray<FAssetValidationData>();
+	OutData[static_cast<int32>(EValidationResult::Warning_2)]		= TArray<FAssetValidationData>();
+	OutData[static_cast<int32>(EValidationResult::Information_1)]	= TArray<FAssetValidationData>();
+	OutData[static_cast<int32>(EValidationResult::Passed_0)]		= TArray<FAssetValidationData>();
+}
+
 /// <summary>
 /// Create a section for Actions in the submenu and add commands
 /// </summary>
@@ -141,11 +150,12 @@ void FAssetVerifier::ShutdownModule()
 void FAssetVerifier::RunValidator(const FName& ValidatorName)
 {
 	double StartTime = FPlatformTime::Seconds();
-	TArray<FAssetValidationData> ValidationData;
-	TArray<FAssetData> Assets = FAssetScopeBuilder::BuildScopeAll();
-	ValidatorManager->ExecuteValidator(ValidatorName, Assets, ValidationData);
-	FAssetReportGenerator::GenerateReport(ValidationData, LastReport);
-	ShowReportWindow(LastReport, FPlatformTime::Seconds() - StartTime);
+	TArray<TArray<FAssetValidationData>> CurrentValidationData;
+	SetUpValidationData(CurrentValidationData);
+	FAssetScopeBuilder::BuildScopeAll(CurrentAssetBatch);
+	ValidatorManager->ExecuteValidator(ValidatorName, CurrentAssetBatch, CurrentValidationData);
+	FAssetReportGenerator::GenerateReport(CurrentValidationData, CurrentReport);
+	ShowReportWindow(CurrentReport, FPlatformTime::Seconds() - StartTime);
 }
 
 /// <summary>
@@ -179,8 +189,6 @@ void FAssetVerifier::OpenSettingsWindow()
 
 void FAssetVerifier::ShowReportWindow(const FAssetValidationReport& Report, double TimeElapsed)
 {
-	FAssetReportGenerator::StreamSmallReportToLog(Report);
-
 	auto SaveToCSV = FSimpleDelegate::CreateLambda([Report]()
 		{
 			FAssetReportGenerator::SaveSmallReportToCSVFile(Report);

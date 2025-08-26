@@ -60,9 +60,6 @@
     <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\AssetVerifierSettings.cpp">
       <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Private</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\ValidatorManager.cpp">
-      <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Private</Filter>
-    </ClCompile>
     <Filter Include="Plugins\AssetVerifier\Source\AssetVerifier\Private\Fixers">
       <UniqueIdentifier>{DD013F5F-C22A-375C-AA2A-54CF51FD4D43}</UniqueIdentifier>
     </Filter>
@@ -70,6 +67,9 @@
       <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Private\Fixers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\Fixers\AssetNamingFixer.cpp">
+      <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Private\Fixers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\Fixers\FixerManager.cpp">
       <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Private\Fixers</Filter>
     </ClCompile>
     <Filter Include="Plugins\AssetVerifier\Source\AssetVerifier\Private\Reporting">
@@ -102,9 +102,9 @@
     <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\Validators\AssetNamingValidator.cpp">
       <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Private\Validators</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\Validators\IAssetValidator.h">
+    <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\Validators\ValidatorManager.cpp">
       <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Private\Validators</Filter>
-    </ClInclude>
+    </ClCompile>
     <Filter Include="Plugins\AssetVerifier\Source\AssetVerifier\Public">
       <UniqueIdentifier>{527151D2-3A11-31F0-8A1B-3714A035119C}</UniqueIdentifier>
     </Filter>
@@ -123,9 +123,6 @@
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\AssetVerifierSettings.h">
       <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Public</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\ValidatorManager.h">
-      <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Public</Filter>
-    </ClInclude>
     <Filter Include="Plugins\AssetVerifier\Source\AssetVerifier\Public\Fixers">
       <UniqueIdentifier>{9A86A322-2E4A-3CF3-9C08-4CB239B69FDA}</UniqueIdentifier>
     </Filter>
@@ -133,6 +130,12 @@
       <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Public\Fixers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Fixers\AssetNamingFixer.h">
+      <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Public\Fixers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Fixers\FixerManager.h">
+      <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Public\Fixers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Fixers\IAssetFixer.h">
       <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Public\Fixers</Filter>
     </ClInclude>
     <Filter Include="Plugins\AssetVerifier\Source\AssetVerifier\Public\UI">
@@ -154,6 +157,12 @@
       <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Public\Validators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Validators\AssetNamingValidator.h">
+      <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Public\Validators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Validators\IAssetValidator.h">
+      <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Public\Validators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Validators\ValidatorManager.h">
       <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Public\Validators</Filter>
     </ClInclude>
     <None Include="..\..\Plugins\AssetVerifier\AssetVerifier.uplugin">

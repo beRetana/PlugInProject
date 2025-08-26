@@ -105,6 +105,11 @@ TArray<FAssetData> FAssetScopeBuilder::BuildScopeAll()
 	return Assets;
 }
 
+void FAssetScopeBuilder::BuildScopeAll(TArray<FAssetData>& OutAssets)
+{
+	QueryAssets(MakeFilterScopeAll(), OutAssets);
+}
+
 /// <summary>
 /// Returns a list of all assets in the specified folders by the filter.
 /// </summary>

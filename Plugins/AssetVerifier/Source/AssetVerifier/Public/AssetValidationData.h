@@ -1,77 +1,62 @@
 #pragma once
 
-#include "AssetValidationData.generated.h"
-
-UENUM(BlueprintType)
 enum class EValidationResult : uint8
 {
-	Passed			UMETA(DisplayName = "Passed"),
-	Error			UMETA(DisplayName = "Error"),
-	Warning			UMETA(DisplayName = "Warning"),
-	Information		UMETA(DisplayName = "Information")
+	Passed_0		= 0,
+	Information_1	= 1,
+	Warning_2		= 2,
+	Error_3			= 3,
 };
 
-USTRUCT(BlueprintType)
-struct ASSETVERIFIER_API FAssetValidationData
+struct FAssetValidationData
 {
-	GENERATED_BODY()
+	FAssetData Asset;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Validation Data")
-	FName AssetName;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Validation Data")
-	FString AssetPath;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Validation Data")
 	FName ValidatorName;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Validation Data")
+	FName FixerName;
+
 	EValidationResult Result;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Validation Data")
 	FString Message;
 
-
-	FAssetValidationData() : Result(EValidationResult::Passed)
+	FAssetValidationData() : Result(EValidationResult::Passed_0)
 	{
 	}
 };
 
-USTRUCT(BlueprintType)
-struct ASSETVERIFIER_API FValidationReportSummary
+struct FValidationReportSummary
 {
-	GENERATED_BODY()
+	uint32 TotalAssets{0};
 
-	UPROPERTY(BlueprintReadOnly, Category = "Validation Report Summary")
-	int32 TotalAssets{0};
+	uint32 Passed{0};
 
-	UPROPERTY(BlueprintReadOnly, Category = "Validation Report Summary")
-	int32 Passed{0};
+	uint32 Errors{0};
 
-	UPROPERTY(BlueprintReadOnly, Category = "Validation Report Summary")
-	int32 Errors{0};
+	uint32 Warnings{0};
 
-	UPROPERTY(BlueprintReadOnly, Category = "Validation Report Summary")
-	int32 Warnings{0};
+	uint32 Information{0};
 
-	UPROPERTY(BlueprintReadOnly, Category = "Validation Report Summary")
-	int32 Information{0};
+	void Reset()
+	{
+		TotalAssets = 0;
+		Passed = 0;
+		Errors = 0;
+		Warnings = 0;
+		Information = 0;
+	}
 
 	FValidationReportSummary() = default;
 };
 
-USTRUCT(BlueprintType)
-struct ASSETVERIFIER_API FAssetValidationReport
+struct FAssetValidationReport
 {
-	GENERATED_BODY()
+	TArray<TArray<FAssetValidationData>> ValidationData;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Asset Validation Report")
-	TArray<FAssetValidationData> ValidationData;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Asset Validation Report")
 	FValidationReportSummary Summary;
 
 	TMap<FName, int32> ErrorCountPerValidator;
+
 	TMap<FName, int32> ErrorCountPerAsset;
 
 	FAssetValidationReport() = default;

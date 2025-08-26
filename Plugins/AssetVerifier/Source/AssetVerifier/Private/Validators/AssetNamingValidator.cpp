@@ -2,13 +2,12 @@
 #include "Validators/AssetNamingValidator.h"	
 #include "AssetVerifierSettings.h"
 #include "AssetValidationData.h"
-#include "AssetScopeBuilder.h"
 
 #define LOCTEXT_NAMESPACE "AssetNamingValidator"
 
 const TCHAR* FAssetNamingValidator::ASSET_REGISTRY = TEXT("AssetRegistry");
 
-void FAssetNamingValidator::Validate(TArray<FAssetData>& Assets, TArray<FAssetValidationData>& OutValidationData)
+void FAssetNamingValidator::Validate(const TArray<FAssetData>& Assets, TArray<TArray<FAssetValidationData>>& OutValidationData)
 {
 	UE_LOG(LogTemp, Log, TEXT("Checking For Naming Convention On Static Meshes: %s"), *NameConventionPrefix);
 	
@@ -19,10 +18,10 @@ void FAssetNamingValidator::Validate(TArray<FAssetData>& Assets, TArray<FAssetVa
 
 	for (const FAssetData& asset : Assets)
 	{
-		if (asset.AssetClassPath.ToString() != StaticClassName || !asset.IsTopLevelAsset()) continue;
+		if (!asset.IsTopLevelAsset() || asset.AssetClassPath.ToString() != StaticClassName) continue;
 		FAssetValidationData ValidationData;
 		FillValidationData(ValidationData, asset);
-		OutValidationData.Add(ValidationData);
+		OutValidationData[static_cast<int32>(ValidationData.Result)].Emplace(MoveTemp(ValidationData));
 	}
 
 	if (InvalidAssetsNum)
@@ -35,8 +34,7 @@ void FAssetNamingValidator::Validate(TArray<FAssetData>& Assets, TArray<FAssetVa
 
 void FAssetNamingValidator::FillValidationData(FAssetValidationData& OutValidationData, const FAssetData& Asset)
 {
-	OutValidationData.AssetName = Asset.AssetName;
-	OutValidationData.AssetPath = Asset.GetObjectPathString();
+	OutValidationData.Asset = Asset;
 	OutValidationData.ValidatorName = GetValidatorName();
 	++CheckedAssetsNum;
 
@@ -44,7 +42,7 @@ void FAssetNamingValidator::FillValidationData(FAssetValidationData& OutValidati
 
 	if (AssetNameStr.StartsWith(NameConventionPrefix))
 	{
-		OutValidationData.Result = EValidationResult::Passed;
+		OutValidationData.Result = EValidationResult::Passed_0;
 		OutValidationData.Message = FString::Printf(
 			TEXT("Asset %s follows naming convention: %s"),
 			*AssetNameStr,
@@ -58,7 +56,7 @@ void FAssetNamingValidator::FillValidationData(FAssetValidationData& OutValidati
 			*NameConventionPrefix);
 		
 		++InvalidAssetsNum;
-		OutValidationData.Result = EValidationResult::Error;
+		OutValidationData.Result = EValidationResult::Error_3;
 		OutValidationData.Message = FString::Printf(
 			TEXT("Asset %s does not follow the naming convention: %s"), 
 			*AssetNameStr,

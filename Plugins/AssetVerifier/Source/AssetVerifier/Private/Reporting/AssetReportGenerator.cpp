@@ -1,47 +1,52 @@
 
 #include "AssetReportGenerator.h"
 
-void FAssetReportGenerator::GenerateReport(TArray<FAssetValidationData>& ValidationData, FAssetValidationReport& ReportOut)
+void FAssetReportGenerator::GenerateReport(TArray<TArray<FAssetValidationData>>& ValidationData, FAssetValidationReport& ReportOut)
 {
 	ReportOut.ValidationData = MoveTemp(ValidationData);
 	ReportOut.ErrorCountPerAsset.Empty();
 	ReportOut.ErrorCountPerValidator.Empty();
+	ReportOut.Summary.Reset();
 
-	for (auto issueData : ReportOut.ValidationData)
+	for (auto& groupData : ReportOut.ValidationData)
 	{
-		if (!ReportOut.ErrorCountPerAsset.Contains(issueData.AssetName))
+		for (auto& issueData : groupData)
 		{
-			ReportOut.ErrorCountPerAsset.Add(issueData.AssetName, 0);
-		}
+			if (!ReportOut.ErrorCountPerAsset.Contains(issueData.Asset.AssetName))
+			{
+				ReportOut.ErrorCountPerAsset.Add(issueData.Asset.AssetName, 0);
+			}
 
-		if (!ReportOut.ErrorCountPerValidator.Contains(issueData.ValidatorName))
-		{
-			ReportOut.ErrorCountPerValidator.Add(issueData.ValidatorName, 0);
-		}
+			if (!ReportOut.ErrorCountPerValidator.Contains(issueData.ValidatorName))
+			{
+				ReportOut.ErrorCountPerValidator.Add(issueData.ValidatorName, 0);
+			}
 
-		switch (issueData.Result)
-		{
-			case EValidationResult::Passed:
+			switch (issueData.Result)
+			{
+			case EValidationResult::Passed_0:
 				++ReportOut.Summary.Passed;
 				break;
-			case EValidationResult::Information:
+			case EValidationResult::Information_1:
 				++ReportOut.Summary.Information;
 				break;
-			case EValidationResult::Warning:
+			case EValidationResult::Warning_2:
 				++ReportOut.Summary.Warnings;
 				break;
-			case EValidationResult::Error:
+			case EValidationResult::Error_3:
 				++ReportOut.Summary.Errors;
-				++ReportOut.ErrorCountPerAsset[issueData.AssetName];
+				++ReportOut.ErrorCountPerAsset[issueData.Asset.AssetName];
 				++ReportOut.ErrorCountPerValidator[issueData.ValidatorName];
 				break;
+			}
 		}
-	}
 
+	}
+	
 	ReportOut.Summary.TotalAssets = ReportOut.ErrorCountPerAsset.Num();
 }
 
-FAssetValidationReport FAssetReportGenerator::GenerateReport(TArray<FAssetValidationData>& ValidationData)
+FAssetValidationReport FAssetReportGenerator::GenerateReport(TArray<TArray<FAssetValidationData>>& ValidationData)
 {
 	FAssetValidationReport Report;
 	GenerateReport(ValidationData, Report);
@@ -72,17 +77,21 @@ void FAssetReportGenerator::GenerateSummaryReportToCSV(const FValidationReportSu
 	OutCSV += FString::Printf(TEXT("Total Passed,%d\n"), Summary.Passed);
 }
 
-void FAssetReportGenerator::GenerateFullReportToCSV(const TArray<FAssetValidationData>& ValidationData, FString& OutCSV)
+void FAssetReportGenerator::GenerateFullReportToCSV(const TArray<TArray<FAssetValidationData>>& ValidationData, FString& OutCSV)
 {
 	OutCSV += TEXT("Asset Name,Asset Path,Validator Name,Result,Message\n");
-	for (const auto& Data : ValidationData)
+
+	for (const auto& DataGroup : ValidationData)
 	{
-		OutCSV += FString::Printf(TEXT("%s,%s,%s,%s,%s\n"),
-			*Data.AssetName.ToString(),
-			*Data.AssetPath,
-			*Data.ValidatorName.ToString(),
-			*EnumResultToString(Data.Result),
-			*Data.Message);
+		for (const auto& Data : DataGroup)
+		{
+			OutCSV += FString::Printf(TEXT("%s,%s,%s,%s,%s\n"),
+				*Data.Asset.AssetName.ToString(),
+				*Data.Asset.GetObjectPathString(),
+				*Data.ValidatorName.ToString(),
+				*EnumResultToString(Data.Result),
+				*Data.Message);
+		}
 	}
 }
 
@@ -146,23 +155,28 @@ void FAssetReportGenerator::GenerateSummaryReportToJSON(const FValidationReportS
 	OutJSON += TEXT("\t}");
 }
 
-void FAssetReportGenerator::GenerateFullReportToJSON(const TArray<FAssetValidationData>& ValidationData, FString& OutJSON)
+void FAssetReportGenerator::GenerateFullReportToJSON(const TArray<TArray<FAssetValidationData>>& ValidationData, FString& OutJSON)
 {
 	OutJSON += TEXT("\t\"FullReport\":\n");
 	OutJSON += TEXT("\t\t[\n");
 
-	for (int index = 0; index < ValidationData.Num(); ++index)
+	for (int categoryIndex{0}; categoryIndex < ValidationData.Num(); ++categoryIndex)
 	{
-		const auto& row = ValidationData[index];
+		const auto& category = ValidationData[categoryIndex];
 
-		OutJSON += TEXT("\t\t\t{\n");
-		OutJSON += FString::Printf(TEXT("\t\t\t\t\"AssetName\": \"%s\",\n"), *row.AssetName.ToString());
-		OutJSON += FString::Printf(TEXT("\t\t\t\t\"AssetPath\": \"%s\",\n"), *row.AssetPath);
-		OutJSON += FString::Printf(TEXT("\t\t\t\t\"ValidatorName\": \"%s\",\n"), *row.ValidatorName.ToString());
-		OutJSON += FString::Printf(TEXT("\t\t\t\t\"Result\": \"%s\",\n"), *EnumResultToString(row.Result));
-		OutJSON += FString::Printf(TEXT("\t\t\t\t\"Message\": \"%s\"\n"), *row.Message);
+		for (int rowIndex{0}; rowIndex < category.Num(); ++rowIndex)
+		{
+			const auto& row = category[rowIndex];
 
-		OutJSON += (index < ValidationData.Num() - 1) ? TEXT("\t\t\t},\n") : TEXT("\t\t\t}\n");
+			OutJSON += TEXT("\t\t\t{\n");
+			OutJSON += FString::Printf(TEXT("\t\t\t\t\"AssetName\": \"%s\",\n"), *row.Asset.AssetName.ToString());
+			OutJSON += FString::Printf(TEXT("\t\t\t\t\"AssetPath\": \"%s\",\n"), *row.Asset.GetObjectPathString());
+			OutJSON += FString::Printf(TEXT("\t\t\t\t\"ValidatorName\": \"%s\",\n"), *row.ValidatorName.ToString());
+			OutJSON += FString::Printf(TEXT("\t\t\t\t\"Result\": \"%s\",\n"), *EnumResultToString(row.Result));
+			OutJSON += FString::Printf(TEXT("\t\t\t\t\"Message\": \"%s\"\n"), *row.Message);
+
+			OutJSON += (rowIndex < category.Num() - 1 && categoryIndex < ValidationData.Num() - 1) ? TEXT("\t\t\t},\n") : TEXT("\t\t\t}\n");
+		}
 	}
 
 	OutJSON += TEXT("\t\t]");
@@ -234,36 +248,39 @@ void FAssetReportGenerator::GenerateSummaryReportToLog(const FValidationReportSu
 	OutLog += FString::Printf(TEXT("Total Information: %d\n\n"), Summary.Information);
 }
 
-void FAssetReportGenerator::GenerateFullReportToLog(const TArray<FAssetValidationData>& ValidationData, FString& OutLog)
+void FAssetReportGenerator::GenerateFullReportToLog(const TArray<TArray<FAssetValidationData>>& ValidationData, FString& OutLog)
 {
 	OutLog += TEXT(" \n------------------Full Report----------------------\n\n");
-	for (const auto& Data : ValidationData)
+	for (const auto& DataGroup : ValidationData)
 	{
-		FString ResultString;
-		
-		switch (Data.Result)
+		for (const auto& Row : DataGroup)
 		{
-			case EValidationResult::Passed:
+			FString ResultString;
+
+			switch (Row.Result)
+			{
+			case EValidationResult::Passed_0:
 				ResultString = TEXT("Passed");
 				break;
-			case EValidationResult::Information:
+			case EValidationResult::Information_1:
 				ResultString = TEXT("Information");
 				break;
-			case EValidationResult::Warning:
+			case EValidationResult::Warning_2:
 				ResultString = TEXT("Warning");
 				break;
-			case EValidationResult::Error:
+			case EValidationResult::Error_3:
 				ResultString = TEXT("Error");
 				break;
-		}
+			}
 
-		OutLog += FString::Printf(TEXT("[%s] | %s | %s |\n"),
-			*ResultString,
-			*Data.AssetName.ToString(),
-			*Data.ValidatorName.ToString());
-		OutLog += FString::Printf(TEXT("Asset Path: %s\n"), *Data.AssetPath);
-		OutLog += FString::Printf(TEXT("Message: %s\n"), *Data.Message);
-		OutLog += TEXT("---------------------------------------------------\n");
+			OutLog += FString::Printf(TEXT("[%s] | %s | %s |\n"),
+				*ResultString,
+				*Row.Asset.AssetName.ToString(),
+				*Row.ValidatorName.ToString());
+			OutLog += FString::Printf(TEXT("Asset Path: %s\n"), *Row.Asset.GetObjectPathString());
+			OutLog += FString::Printf(TEXT("Message: %s\n"), *Row.Message);
+			OutLog += TEXT("---------------------------------------------------\n");
+		}
 	}
 }
 
@@ -373,13 +390,13 @@ FString FAssetReportGenerator::EnumResultToString(EValidationResult Result)
 {
 	switch (Result)
 	{
-		case EValidationResult::Passed:
+		case EValidationResult::Passed_0:
 			return TEXT("Passed");
-		case EValidationResult::Information:
+		case EValidationResult::Information_1:
 			return TEXT("Information");
-		case EValidationResult::Warning:
+		case EValidationResult::Warning_2:
 			return TEXT("Warning");
-		case EValidationResult::Error:
+		case EValidationResult::Error_3:
 			return TEXT("Error");
 		default:
 			return TEXT("Unknown");

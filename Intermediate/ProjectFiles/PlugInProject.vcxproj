@@ -527,15 +527,15 @@
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\ValidatorManager.cpp">
-      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
     <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\Fixers\AssetLODFixer.cpp">
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\Fixers\AssetNamingFixer.cpp">
+      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\Fixers\FixerManager.cpp">
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
@@ -564,20 +564,26 @@
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\Validators\IAssetValidator.h"/>
+    <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\Validators\ValidatorManager.cpp">
+      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\AssetScopeBuilder.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\AssetValidationData.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\AssetVerifier.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\AssetVerifierCommands.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\AssetVerifierSettings.h"/>
-    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\ValidatorManager.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Fixers\AssetLODFixer.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Fixers\AssetNamingFixer.h"/>
+    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Fixers\FixerManager.h"/>
+    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Fixers\IAssetFixer.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\UI\AssetVerifierSettingsWindow.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\UI\ValidationResultWindow.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Validators\AssetFileSizeValidator.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Validators\AssetLODValidator.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Validators\AssetNamingValidator.h"/>
+    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Validators\IAssetValidator.h"/>
+    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Validators\ValidatorManager.h"/>
     <None Include="..\..\Plugins\AssetVerifier\AssetVerifier.uplugin"/>
     <None Include="..\..\Plugins\AssetVerifier\Resources\Icon128.png"/>
     <None Include="..\..\Source\PlugInProject\PlugInProject.Build.cs"/>

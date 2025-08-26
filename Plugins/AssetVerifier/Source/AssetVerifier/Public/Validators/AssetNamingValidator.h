@@ -11,7 +11,7 @@ public:
 
 	virtual ~FAssetNamingValidator() = default;
 
-	virtual void Validate(TArray<FAssetData>& Assets, TArray<FAssetValidationData>& OutValidationData) override;
+	virtual void Validate(const TArray<FAssetData>& Assets, TArray<TArray<FAssetValidationData>>& OutValidationData) override;
 
 	virtual void FillValidationData(FAssetValidationData& OutValidationData, const FAssetData& Asset) override;
 	
@@ -28,8 +28,8 @@ public:
 private:
 
 	FString NameConventionPrefix;
-	int32 InvalidAssetsNum = 0;
-	int32 CheckedAssetsNum = 0;
+	uint32 InvalidAssetsNum = 0;
+	uint32 CheckedAssetsNum = 0;
 
 	static const inline TCHAR* VALIDATOR_NAME = TEXT("Asset Naming Validator");
 };

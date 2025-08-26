@@ -1,0 +1,1 @@
+#include "Fixers\AssetNamingFixer.h"

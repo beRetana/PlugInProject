@@ -7,6 +7,8 @@ class FAssetScopeBuilder
 public:
 
 	static TArray<FAssetData> BuildScopeAll();
+	static void BuildScopeAll(TArray<FAssetData>& OutAssets);
+
 	static TArray<FAssetData> BuildScopeSelected();
 	static TArray<FAssetData> BuildScopeFolder(const TArray<FName>& FoldersPaths);
 

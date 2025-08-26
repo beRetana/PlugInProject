@@ -20,6 +20,7 @@ private:
 	void SetUpDependencies();
 	void MapCommands();
 	void SetUpUI();
+	void SetUpValidationData(TArray<TArray<FAssetValidationData>>& OutData);
 	void ShowReportWindow(const FAssetValidationReport& Report, double TimeElapsed);
 	void OpenSettingsWindow();
 	void RunValidator(const FName& ValidatorName);
@@ -30,7 +31,8 @@ private:
 	TSharedPtr<class FAssetVerifierSettings> VerifierSettings;
 	TSharedPtr<class SWindow> SettingsWindowUI;
 	
-	FAssetValidationReport LastReport;
+	FAssetValidationReport CurrentReport;
+	TArray<FAssetData> CurrentAssetBatch;
 
 	FName StaticMeshNaming = TEXT("StaticMeshNamingValidator");
 };
