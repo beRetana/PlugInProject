@@ -1,12 +1,12 @@
 #pragma once
 
-struct FAssetValidationData;
+struct FFixerData;
 
 class IAssetFixer
 {
 public:
 	virtual ~IAssetFixer() = default;
-	virtual void Fix(FAssetValidationData& Asset) = 0;
+	virtual void Fix(FFixerData& Asset) = 0;
 	virtual FName GetFixerName() const = 0;
 
 private:

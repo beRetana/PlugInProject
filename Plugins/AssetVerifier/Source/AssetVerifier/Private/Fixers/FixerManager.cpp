@@ -2,18 +2,17 @@
 #include "Fixers/IAssetFixer.h"
 #include "AssetValidationData.h"
 
-void FFixerManager::ExecuteFixer(const FName& FixerName, TArray<TArray<FAssetValidationData>>& ValidationData)
+void FFixerManager::ExecuteFixer(const FName& FixerName, FAssetValidationReport& Report)
 {
-	auto& Issues = ValidationData[static_cast<int32>(EValidationResult::Error_3)];
-	
 	if (auto* Fixer = FixersMap.Find(FixerName))
 	{
-		for (auto& Issue : Issues)
+		if (auto* FixerData = Report.ValidatorToFixerData.Find(FixerName))
 		{
-			if (Issue.FixerName != FixerName) continue;
-
-			Fixer->Fix(Issue);
+			Fixer->Fix(*FixerData); 
+			return;
 		}
+
+		UE_LOG(LogTemp, Warning, TEXT("No validation data found for fixer %s."), *FixerName.ToString());
 	}
 	else
 	{
@@ -21,10 +20,10 @@ void FFixerManager::ExecuteFixer(const FName& FixerName, TArray<TArray<FAssetVal
 	}
 }
 
-void FFixerManager::ExecuteFixers(const TArray<FName>& FixerNames, TArray<TArray<FAssetValidationData>>& ValidationData)
+void FFixerManager::ExecuteFixers(const TArray<FName>& FixerNames, FAssetValidationReport& Report)
 {
 	for (const FName& FixerName : FixerNames)
 	{
-		ExecuteFixer(FixerName, ValidationData);
+		ExecuteFixer(FixerName, Report);
 	}
 }

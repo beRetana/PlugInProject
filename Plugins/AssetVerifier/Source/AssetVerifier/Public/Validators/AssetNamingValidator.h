@@ -6,14 +6,15 @@ class FAssetNamingValidator : public IAssetValidator
 {
 public:
 
-	FAssetNamingValidator(FString Prefix = TEXT("SM_")) : NameConventionPrefix(Prefix)
+	FAssetNamingValidator(FName FixerName = TEXT("NamingFixer"), FString Prefix = TEXT("SM_")) :
+		NameConventionPrefix(Prefix), FixerName(FixerName)
 	{}
 
 	virtual ~FAssetNamingValidator() = default;
 
-	virtual void Validate(const TArray<FAssetData>& Assets, TArray<TArray<FAssetValidationData>>& OutValidationData) override;
+	virtual void Validate(const TArray<FAssetData>& Assets, FAssetValidationReport& OutValidationReport) override;
 
-	virtual void FillValidationData(FAssetValidationData& OutValidationData, const FAssetData& Asset) override;
+	virtual void FillValidationData(const FAssetData& Asset, FAssetValidationData& OutValidationData) override;
 	
 	virtual void ApplySettings(const FAssetVerifierSettings& Settings) override;
 
@@ -23,11 +24,14 @@ public:
 
 	virtual FName GetValidatorName() const override;
 
+	virtual FName GetFixerName() const override;
+
 	static const TCHAR* ASSET_REGISTRY;
 
 private:
 
 	FString NameConventionPrefix;
+	FName FixerName;
 	uint32 InvalidAssetsNum = 0;
 	uint32 CheckedAssetsNum = 0;
 

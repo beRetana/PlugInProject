@@ -1,20 +1,19 @@
 
 #include "AssetReportGenerator.h"
 
-void FAssetReportGenerator::GenerateReport(TArray<TArray<FAssetValidationData>>& ValidationData, FAssetValidationReport& ReportOut)
+void FAssetReportGenerator::GenerateReport(FAssetValidationReport& ReportOut)
 {
-	ReportOut.ValidationData = MoveTemp(ValidationData);
 	ReportOut.ErrorCountPerAsset.Empty();
 	ReportOut.ErrorCountPerValidator.Empty();
 	ReportOut.Summary.Reset();
 
-	for (auto& groupData : ReportOut.ValidationData)
+	for (auto& groupData : ReportOut.ValidatorToFixerData)
 	{
-		for (auto& issueData : groupData)
+		for (auto& issueData : groupData.Value.AllValidationData)
 		{
-			if (!ReportOut.ErrorCountPerAsset.Contains(issueData.Asset.AssetName))
+			if (!ReportOut.ErrorCountPerAsset.Contains(issueData.Asset->AssetName))
 			{
-				ReportOut.ErrorCountPerAsset.Add(issueData.Asset.AssetName, 0);
+				ReportOut.ErrorCountPerAsset.Add(issueData.Asset->AssetName, 0);
 			}
 
 			if (!ReportOut.ErrorCountPerValidator.Contains(issueData.ValidatorName))
@@ -35,21 +34,20 @@ void FAssetReportGenerator::GenerateReport(TArray<TArray<FAssetValidationData>>&
 				break;
 			case EValidationResult::Error_3:
 				++ReportOut.Summary.Errors;
-				++ReportOut.ErrorCountPerAsset[issueData.Asset.AssetName];
+				++ReportOut.ErrorCountPerAsset[issueData.Asset->AssetName];
 				++ReportOut.ErrorCountPerValidator[issueData.ValidatorName];
 				break;
 			}
 		}
-
 	}
 	
 	ReportOut.Summary.TotalAssets = ReportOut.ErrorCountPerAsset.Num();
 }
 
-FAssetValidationReport FAssetReportGenerator::GenerateReport(TArray<TArray<FAssetValidationData>>& ValidationData)
+FAssetValidationReport FAssetReportGenerator::GenerateReport()
 {
 	FAssetValidationReport Report;
-	GenerateReport(ValidationData, Report);
+	GenerateReport(Report);
 	return Report;
 }
 
@@ -59,7 +57,7 @@ void FAssetReportGenerator::ToCSV(const FAssetValidationReport& ValidationReport
 
 	GenerateSummaryReportToCSV(ValidationReport.Summary, OutCSV);
 	OutCSV += TEXT("END\n");
-	GenerateFullReportToCSV(ValidationReport.ValidationData, OutCSV);
+	GenerateFullReportToCSV(ValidationReport.ValidatorToFixerData, OutCSV);
 	OutCSV += TEXT("END\n");
 	GenerateErrorsPerAssetToCSV(ValidationReport.ErrorCountPerAsset, OutCSV);
 	OutCSV += TEXT("END\n");
@@ -77,17 +75,17 @@ void FAssetReportGenerator::GenerateSummaryReportToCSV(const FValidationReportSu
 	OutCSV += FString::Printf(TEXT("Total Passed,%d\n"), Summary.Passed);
 }
 
-void FAssetReportGenerator::GenerateFullReportToCSV(const TArray<TArray<FAssetValidationData>>& ValidationData, FString& OutCSV)
+void FAssetReportGenerator::GenerateFullReportToCSV(const TMap<FName, FFixerData>& ValidationData, FString& OutCSV)
 {
 	OutCSV += TEXT("Asset Name,Asset Path,Validator Name,Result,Message\n");
 
 	for (const auto& DataGroup : ValidationData)
 	{
-		for (const auto& Data : DataGroup)
+		for (const auto& Data : DataGroup.Value.AllValidationData)
 		{
 			OutCSV += FString::Printf(TEXT("%s,%s,%s,%s,%s\n"),
-				*Data.Asset.AssetName.ToString(),
-				*Data.Asset.GetObjectPathString(),
+				*Data.Asset->AssetName.ToString(),
+				*Data.Asset->GetObjectPathString(),
 				*Data.ValidatorName.ToString(),
 				*EnumResultToString(Data.Result),
 				*Data.Message);
@@ -138,7 +136,7 @@ void FAssetReportGenerator::ToJSON(const FAssetValidationReport& Report, FString
 
 	OutJSON += TEXT(",\n");
 
-	GenerateFullReportToJSON(Report.ValidationData, OutJSON); // Add Full Report
+	GenerateFullReportToJSON(Report.ValidatorToFixerData, OutJSON); // Add Full Report
 
 	OutJSON += TEXT("}\n");					   // End of JSON
 }
@@ -155,28 +153,29 @@ void FAssetReportGenerator::GenerateSummaryReportToJSON(const FValidationReportS
 	OutJSON += TEXT("\t}");
 }
 
-void FAssetReportGenerator::GenerateFullReportToJSON(const TArray<TArray<FAssetValidationData>>& ValidationData, FString& OutJSON)
+void FAssetReportGenerator::GenerateFullReportToJSON(const TMap<FName, FFixerData>& ValidationData, FString& OutJSON)
 {
 	OutJSON += TEXT("\t\"FullReport\":\n");
 	OutJSON += TEXT("\t\t[\n");
 
-	for (int categoryIndex{0}; categoryIndex < ValidationData.Num(); ++categoryIndex)
+	int32 FixerIndex{0};
+	for (const auto& Fixer : ValidationData)
 	{
-		const auto& category = ValidationData[categoryIndex];
+		int32 AssetDataIndex{0};
 
-		for (int rowIndex{0}; rowIndex < category.Num(); ++rowIndex)
+		for (const auto& AssetData : Fixer.Value.AllValidationData)
 		{
-			const auto& row = category[rowIndex];
-
 			OutJSON += TEXT("\t\t\t{\n");
-			OutJSON += FString::Printf(TEXT("\t\t\t\t\"AssetName\": \"%s\",\n"), *row.Asset.AssetName.ToString());
-			OutJSON += FString::Printf(TEXT("\t\t\t\t\"AssetPath\": \"%s\",\n"), *row.Asset.GetObjectPathString());
-			OutJSON += FString::Printf(TEXT("\t\t\t\t\"ValidatorName\": \"%s\",\n"), *row.ValidatorName.ToString());
-			OutJSON += FString::Printf(TEXT("\t\t\t\t\"Result\": \"%s\",\n"), *EnumResultToString(row.Result));
-			OutJSON += FString::Printf(TEXT("\t\t\t\t\"Message\": \"%s\"\n"), *row.Message);
+			OutJSON += FString::Printf(TEXT("\t\t\t\t\"AssetName\": \"%s\",\n"), *AssetData.Asset->AssetName.ToString());
+			OutJSON += FString::Printf(TEXT("\t\t\t\t\"AssetPath\": \"%s\",\n"), *AssetData.Asset->GetObjectPathString());
+			OutJSON += FString::Printf(TEXT("\t\t\t\t\"ValidatorName\": \"%s\",\n"), *AssetData.ValidatorName.ToString());
+			OutJSON += FString::Printf(TEXT("\t\t\t\t\"Result\": \"%s\",\n"), *EnumResultToString(AssetData.Result));
+			OutJSON += FString::Printf(TEXT("\t\t\t\t\"Message\": \"%s\"\n"), *AssetData.Message);
 
-			OutJSON += (rowIndex < category.Num() - 1 && categoryIndex < ValidationData.Num() - 1) ? TEXT("\t\t\t},\n") : TEXT("\t\t\t}\n");
+			OutJSON += (AssetDataIndex < Fixer.Value.AllValidationData.Num() - 1 && FixerIndex < ValidationData.Num() - 1) ? TEXT("\t\t\t},\n") : TEXT("\t\t\t}\n");
+			++AssetDataIndex;
 		}
+		++FixerIndex;
 	}
 
 	OutJSON += TEXT("\t\t]");
@@ -248,12 +247,12 @@ void FAssetReportGenerator::GenerateSummaryReportToLog(const FValidationReportSu
 	OutLog += FString::Printf(TEXT("Total Information: %d\n\n"), Summary.Information);
 }
 
-void FAssetReportGenerator::GenerateFullReportToLog(const TArray<TArray<FAssetValidationData>>& ValidationData, FString& OutLog)
+void FAssetReportGenerator::GenerateFullReportToLog(const TMap<FName, FFixerData>& ValidationData, FString& OutLog)
 {
 	OutLog += TEXT(" \n------------------Full Report----------------------\n\n");
 	for (const auto& DataGroup : ValidationData)
 	{
-		for (const auto& Row : DataGroup)
+		for (const auto& Row : DataGroup.Value.AllValidationData)
 		{
 			FString ResultString;
 
@@ -275,9 +274,9 @@ void FAssetReportGenerator::GenerateFullReportToLog(const TArray<TArray<FAssetVa
 
 			OutLog += FString::Printf(TEXT("[%s] | %s | %s |\n"),
 				*ResultString,
-				*Row.Asset.AssetName.ToString(),
+				*Row.Asset->AssetName.ToString(),
 				*Row.ValidatorName.ToString());
-			OutLog += FString::Printf(TEXT("Asset Path: %s\n"), *Row.Asset.GetObjectPathString());
+			OutLog += FString::Printf(TEXT("Asset Path: %s\n"), *Row.Asset->GetObjectPathString());
 			OutLog += FString::Printf(TEXT("Message: %s\n"), *Row.Message);
 			OutLog += TEXT("---------------------------------------------------\n");
 		}
@@ -333,7 +332,7 @@ bool FAssetReportGenerator::SaveSmallReportToCSVFile(const FAssetValidationRepor
 		return false;
 	CSV.Empty();
 
-	GenerateFullReportToCSV(Report.ValidationData, CSV);
+	GenerateFullReportToCSV(Report.ValidatorToFixerData, CSV);
 	if (!SaveStringAtomicallyToFile(CSV, Directory / TEXT("FullReport.csv")))
 		return false;
 	CSV.Empty();

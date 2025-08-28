@@ -4,13 +4,13 @@
 #include "AssetValidationData.h"
 #include "AssetVerifierSettings.h"
 
-void FValidatorManager::ExecuteValidator(const FName& ValidatorName, const TArray<FAssetData>& Assets, TArray<TArray<FAssetValidationData>>& ValidationData)
+void FValidatorManager::ExecuteValidator(const FName& ValidatorName, const TArray<FAssetData>& Assets, FAssetValidationReport& ValidationReport)
 {
 	if (TUniquePtr<IAssetValidator>* Validator = ValidatorsMap.Find(ValidatorName))
 	{
 		if (Validator->IsValid()) 
 		{
-			Validator->Get()->Validate(Assets, ValidationData);
+			Validator->Get()->Validate(Assets, ValidationReport);
 		}
 		else
 		{
@@ -23,11 +23,11 @@ void FValidatorManager::ExecuteValidator(const FName& ValidatorName, const TArra
 	}
 }
 
-void FValidatorManager::ExecuteValidators(const TArray<FName>& ValidatorsName, const TArray<FAssetData>& Assets, TArray<TArray<FAssetValidationData>>& ValidationData)
+void FValidatorManager::ExecuteValidators(const TArray<FName>& ValidatorsName, const TArray<FAssetData>& Assets, FAssetValidationReport& ValidationReport)
 {
 	for (const auto& ValidatorName : ValidatorsName)
 	{
-		ExecuteValidator(ValidatorName, Assets, ValidationData);
+		ExecuteValidator(ValidatorName, Assets, ValidationReport);
 	}
 }
 

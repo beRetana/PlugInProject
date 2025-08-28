@@ -1,5 +1,6 @@
 
-#include "Validators/AssetNamingValidator.h"	
+#include "Validators/AssetNamingValidator.h"
+#include "Fixers/AssetNamingFixer.h"
 #include "AssetVerifierSettings.h"
 #include "AssetValidationData.h"
 
@@ -7,7 +8,7 @@
 
 const TCHAR* FAssetNamingValidator::ASSET_REGISTRY = TEXT("AssetRegistry");
 
-void FAssetNamingValidator::Validate(const TArray<FAssetData>& Assets, TArray<TArray<FAssetValidationData>>& OutValidationData)
+void FAssetNamingValidator::Validate(const TArray<FAssetData>& Assets, FAssetValidationReport& OutValidationReport)
 {
 	UE_LOG(LogTemp, Log, TEXT("Checking For Naming Convention On Static Meshes: %s"), *NameConventionPrefix);
 	
@@ -20,8 +21,8 @@ void FAssetNamingValidator::Validate(const TArray<FAssetData>& Assets, TArray<TA
 	{
 		if (!asset.IsTopLevelAsset() || asset.AssetClassPath.ToString() != StaticClassName) continue;
 		FAssetValidationData ValidationData;
-		FillValidationData(ValidationData, asset);
-		OutValidationData[static_cast<int32>(ValidationData.Result)].Emplace(MoveTemp(ValidationData));
+		FillValidationData(asset, ValidationData);
+		OutValidationReport.ValidatorToFixerData.FindOrAdd(GetFixerName()).Add(ValidationData);
 	}
 
 	if (InvalidAssetsNum)
@@ -32,10 +33,11 @@ void FAssetNamingValidator::Validate(const TArray<FAssetData>& Assets, TArray<TA
 	UE_LOG(LogTemp, Log, TEXT("%d Static Meshes were checked"), CheckedAssetsNum);
 }
 
-void FAssetNamingValidator::FillValidationData(FAssetValidationData& OutValidationData, const FAssetData& Asset)
+void FAssetNamingValidator::FillValidationData(const FAssetData& Asset, FAssetValidationData& OutValidationData)
 {
-	OutValidationData.Asset = Asset;
+	OutValidationData.Asset = &Asset;
 	OutValidationData.ValidatorName = GetValidatorName();
+	OutValidationData.FixerName = GetFixerName();
 	++CheckedAssetsNum;
 
 	FString AssetNameStr = Asset.AssetName.ToString();
@@ -56,6 +58,7 @@ void FAssetNamingValidator::FillValidationData(FAssetValidationData& OutValidati
 			*NameConventionPrefix);
 		
 		++InvalidAssetsNum;
+		OutValidationData.FixerName = GetFixerName();
 		OutValidationData.Result = EValidationResult::Error_3;
 		OutValidationData.Message = FString::Printf(
 			TEXT("Asset %s does not follow the naming convention: %s"), 
@@ -83,6 +86,11 @@ void FAssetNamingValidator::ChangeConvention(const FString& NewConvention)
 FName FAssetNamingValidator::GetValidatorName() const
 {
 	return FName(VALIDATOR_NAME);
+}
+
+FName FAssetNamingValidator::GetFixerName() const
+{
+	return FixerName;
 }
 
 #undef LOCTEXT_NAMESPACE

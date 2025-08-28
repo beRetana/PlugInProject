@@ -6,8 +6,8 @@ class FValidatorManager
 {
 public:
 
-	void ExecuteValidator(const FName& ValidatorName, const TArray<FAssetData>& Assets, TArray<TArray<struct FAssetValidationData>>& ValidationData);
-	void ExecuteValidators(const TArray<FName>& ValidatorsName, const TArray<FAssetData>& Assets, TArray<TArray<struct FAssetValidationData>>& ValidationData);
+	void ExecuteValidator(const FName& ValidatorName, const TArray<FAssetData>& Assets, FAssetValidationReport& ValidationReport);
+	void ExecuteValidators(const TArray<FName>& ValidatorsName, const TArray<FAssetData>& Assets, FAssetValidationReport& ValidationReport);
 	void ApplySettings(const class FAssetVerifierSettings& Settings);
 
 	template<typename TValidator, typename... TArgs>
@@ -26,5 +26,5 @@ public:
 
 private:
 
-	TSortedMap<FName, TUniquePtr<class IAssetValidator>, FDefaultAllocator, FNameFastLess> ValidatorsMap;
+	TMap<FName, TUniquePtr<class IAssetValidator>> ValidatorsMap;
 };

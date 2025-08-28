@@ -41,7 +41,7 @@ void FAssetVerifier::SetUpDependencies()
 	VerifierSettings = MakeShareable(new FAssetVerifierSettings);
 
 	VerifierSettings->OnSettingsChanged.AddRaw(this, &FAssetVerifier::ApplySettings);
-	ValidatorManager->RegisterValidator<FAssetNamingValidator>(StaticMeshNaming);
+	ValidatorManager->RegisterValidator<FAssetNamingValidator>(NamingValidatorName, NamingFixerName);
 }
 
 /// <summary>
@@ -72,7 +72,7 @@ void FAssetVerifier::MapCommands()
 {
 	Commands->MapAction(
 		FAssetVerifierCommands::Get().CheckStaticMeshNames,
-		FExecuteAction::CreateLambda([this]() {RunValidator(StaticMeshNaming); })
+		FExecuteAction::CreateLambda([this]() {RunValidator(NamingValidatorName); })
 	);
 
 	Commands->MapAction(
@@ -106,7 +106,7 @@ void FAssetVerifier::SetUpUI()
 
 void FAssetVerifier::SetUpValidationData(TArray<TArray<FAssetValidationData>>& OutData)
 {
-	OutData.SetNum(static_cast<int32>(EValidationResult::Error_3) + 1);
+	OutData.SetNum(static_cast<int32>(EValidationResult::Size_4));
 	OutData[static_cast<int32>(EValidationResult::Error_3)]			= TArray<FAssetValidationData>();
 	OutData[static_cast<int32>(EValidationResult::Warning_2)]		= TArray<FAssetValidationData>();
 	OutData[static_cast<int32>(EValidationResult::Information_1)]	= TArray<FAssetValidationData>();
@@ -150,11 +150,9 @@ void FAssetVerifier::ShutdownModule()
 void FAssetVerifier::RunValidator(const FName& ValidatorName)
 {
 	double StartTime = FPlatformTime::Seconds();
-	TArray<TArray<FAssetValidationData>> CurrentValidationData;
-	SetUpValidationData(CurrentValidationData);
-	FAssetScopeBuilder::BuildScopeAll(CurrentAssetBatch);
-	ValidatorManager->ExecuteValidator(ValidatorName, CurrentAssetBatch, CurrentValidationData);
-	FAssetReportGenerator::GenerateReport(CurrentValidationData, CurrentReport);
+	FAssetScopeBuilder::BuildScopeAll(CurrentReport.Assets);
+	ValidatorManager->ExecuteValidator(ValidatorName, CurrentReport.Assets, CurrentReport);
+	FAssetReportGenerator::GenerateReport(CurrentReport);
 	ShowReportWindow(CurrentReport, FPlatformTime::Seconds() - StartTime);
 }
 

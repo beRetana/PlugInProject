@@ -34,5 +34,6 @@ private:
 	FAssetValidationReport CurrentReport;
 	TArray<FAssetData> CurrentAssetBatch;
 
-	FName StaticMeshNaming = TEXT("StaticMeshNamingValidator");
+	const FName NamingValidatorName = TEXT("NamingValidator");
+	const FName NamingFixerName = TEXT("NamingFixer");
 };

@@ -6,9 +6,9 @@ class FAssetReportGenerator
 {
 public:
 
-	static void GenerateReport(TArray<TArray<FAssetValidationData>>& ValidationData, FAssetValidationReport& OutReport);
+	static void GenerateReport(FAssetValidationReport& OutReport);
 
-	static FAssetValidationReport GenerateReport(TArray<TArray<FAssetValidationData>>& ValidationData);
+	static FAssetValidationReport GenerateReport();
 
 	static void ToCSV(const FAssetValidationReport& ValidationData, FString& OutCSV);
 
@@ -34,7 +34,7 @@ private:
 
 	static void GenerateSummaryReportToCSV(const FValidationReportSummary& Summary, FString& OutCSV);
 
-	static void GenerateFullReportToCSV(const TArray<TArray<FAssetValidationData>>& ValidationData, FString& OutCSV);
+	static void GenerateFullReportToCSV(const TMap<FName, FFixerData>& ValidationData, FString& OutCSV);
 
 	static void GenerateErrorsPerAssetToCSV(const TMap<FName, int32>& ErrorCountPerAsset, FString& OutCSV);
 
@@ -42,7 +42,7 @@ private:
 	
 	static void GenerateSummaryReportToJSON(const FValidationReportSummary& Report, FString& OutJSON);
 
-	static void GenerateFullReportToJSON(const TArray<TArray<FAssetValidationData>>& ValidationData, FString& OutJSON);
+	static void GenerateFullReportToJSON(const TMap<FName, FFixerData>& ValidationData, FString& OutJSON);
 
 	static void GenerateErrorsPerAssetToJSON(const TMap<FName, int32>& ErrorCountPerAsset, FString& OutJSON);
 
@@ -50,7 +50,7 @@ private:
 
 	static void GenerateSummaryReportToLog(const FValidationReportSummary& Report, FString& OutLog);
 
-	static void GenerateFullReportToLog(const TArray<TArray<FAssetValidationData>>& ValidationData, FString& OutLog);
+	static void GenerateFullReportToLog(const TMap<FName, FFixerData>& ValidationData, FString& OutLog);
 
 	static void GenerateErrorsPerAssetToLog(const TMap<FName, int32>& ErrorCountPerAsset, FString& OutLog);
 

@@ -2,15 +2,20 @@
 
 enum class EValidationResult : uint8
 {
-	Passed_0		= 0,
-	Information_1	= 1,
-	Warning_2		= 2,
-	Error_3			= 3,
+	Passed_0 = 0,
+	Information_1 = 1,
+	Warning_2 = 2,
+	Error_3 = 3,
+	Size_4 = 4
 };
 
 struct FAssetValidationData
 {
-	FAssetData Asset;
+	const FAssetData* Asset;
+
+	FString FixData;
+
+	FString Message;
 
 	FName ValidatorName;
 
@@ -18,7 +23,7 @@ struct FAssetValidationData
 
 	EValidationResult Result;
 
-	FString Message;
+	bool bCanAutoFix{ false };
 
 	FAssetValidationData() : Result(EValidationResult::Passed_0)
 	{
@@ -49,15 +54,52 @@ struct FValidationReportSummary
 	FValidationReportSummary() = default;
 };
 
+struct FFixerData
+{
+	TArray<FAssetValidationData> AllValidationData;
+
+	TStaticArray<TArray<FAssetValidationData>, static_cast<int32>(EValidationResult::Size_4)> ByResultValidationData;
+
+	TArray<FAssetValidationData>& operator[](EValidationResult Result)
+	{
+		const int32 StatusIndex = static_cast<int32>(Result);
+		checkf(StatusIndex < static_cast<int32>(EValidationResult::Size_4), TEXT("Tried to fetch value but Index out of bounds"));
+		return ByResultValidationData[StatusIndex];
+	}
+
+	void Add(FAssetValidationData& ValidationData)
+	{
+		const int32 StatusIndex = static_cast<int32>(ValidationData.Result);
+		checkf(StatusIndex < static_cast<int32>(EValidationResult::Size_4), TEXT("Tried to add a value but Index out of bounds"));
+		AllValidationData.Add(ValidationData);
+		ByResultValidationData[StatusIndex].Add(ValidationData);
+	}
+};
+
 struct FAssetValidationReport
 {
-	TArray<TArray<FAssetValidationData>> ValidationData;
-
-	FValidationReportSummary Summary;
+	TMap<FName, FFixerData> ValidatorToFixerData;
 
 	TMap<FName, int32> ErrorCountPerValidator;
 
 	TMap<FName, int32> ErrorCountPerAsset;
+
+	FValidationReportSummary Summary;
+
+	TArray<FAssetData> Assets;
+
+	void Add(const FName& FixerName, FAssetValidationData& Data)
+	{
+		ValidatorToFixerData.FindOrAdd(Data.ValidatorName).Add(Data);
+	}
+
+	void Reset()
+	{
+		ValidatorToFixerData.Reset();
+		ErrorCountPerValidator.Reset();
+		ErrorCountPerAsset.Reset();
+		Summary.Reset();
+	}
 
 	FAssetValidationReport() = default;
 };
