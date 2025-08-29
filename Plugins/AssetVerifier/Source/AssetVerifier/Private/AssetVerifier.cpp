@@ -202,7 +202,7 @@ void FAssetVerifier::ShowReportWindow(const FAssetValidationReport& Report, doub
 			FAssetReportGenerator::StreamSmallReportToLog(Report);
 		});
 
-	TSharedRef<SWindow> ReportWindow = SNew(SWindow)
+	ValidationResultsWindow = SNew(SWindow)
 		.Title(LOCTEXT("AssetValidationReport", "Asset Validation Report"))
 		.SizingRule(ESizingRule::Autosized)
 		[
@@ -213,7 +213,7 @@ void FAssetVerifier::ShowReportWindow(const FAssetValidationReport& Report, doub
 		]
 		.SupportsMaximize(false)
 		.SupportsMinimize(true);
-	FSlateApplication::Get().AddWindow(ReportWindow);
+	FSlateApplication::Get().AddWindow(ValidationResultsWindow.ToSharedRef());
 }
 
 #undef LOCTEXT_NAMESPACE

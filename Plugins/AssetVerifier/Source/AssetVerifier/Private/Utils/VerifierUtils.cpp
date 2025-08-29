@@ -1,5 +1,6 @@
 #include "Utils/VerifierUtils.h"
 #include "AssetValidationData.h"
+#include "FileHelpers.h"
 #include "AssetRegistry/AssetData.h"
 #include "SourceControlHelpers.h"
 #include "AssetToolsModule.h"

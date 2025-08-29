@@ -43,6 +43,7 @@ public class AssetVerifier : ModuleRules
 				"LevelEditor",
 				"ToolMenus",
 				"SourceControl",
+				"AssetTools",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

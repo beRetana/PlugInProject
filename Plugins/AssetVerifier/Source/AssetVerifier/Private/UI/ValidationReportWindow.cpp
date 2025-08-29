@@ -17,7 +17,19 @@ void SValidationResultWindow::Construct(const FArguments& InArgs)
 				SNew(STextBlock)
 					.Text(TimeStamp())
 			]
-				+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(0,5.0f,0,0)
+			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(0, 5.0f, 0, 0)
+			[
+				SNew(STextBlock)
+					.Text(ErrorCount())
+			]
+			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(0,5.0f,0,0)
+			[
+				SNew(SButton)
+					.Text(FText::FromString(TEXT("Fix Issues")))
+					.OnClicked(this, &SValidationResultWindow::HandleIssuesWindow)
+					.Visibility(GetVisibility())
+			]
+			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(0,15.0f,0,0)
 			[
 				SNew(STextBlock)
 					.Text(FText::FromString(TEXT("How would you like to save the results?")))
@@ -49,32 +61,42 @@ void SValidationResultWindow::Construct(const FArguments& InArgs)
 
 FReply SValidationResultWindow::HandleSaveToCSV()
 {
-	if (OnSaveToCSV.IsBound())
-	{
-		OnSaveToCSV.Execute();
-	}
+	if (OnSaveToCSV.IsBound()) OnSaveToCSV.Execute();
 	return FReply::Handled();
 }
 
 FReply SValidationResultWindow::HandleSaveToJSON()
 {
-	if (OnSaveToJSON.IsBound())
-	{
-		OnSaveToJSON.Execute();
-	}
+	if (OnSaveToJSON.IsBound()) OnSaveToJSON.Execute();
 	return FReply::Handled();
 }
 
 FReply SValidationResultWindow::HandleStreamToLog()
 {
-	if (OnStreamToLog.IsBound())
-	{
-		OnStreamToLog.Execute();
-	}
+	if (OnStreamToLog.IsBound()) OnStreamToLog.Execute();
+	return FReply::Handled();
+}
+
+FReply SValidationResultWindow::HandleIssuesWindow()
+{
+	if (OnFixIssues.IsBound()) OnFixIssues.Execute();
 	return FReply::Handled();
 }
 
 const FText SValidationResultWindow::TimeStamp()
 {
 	return FText::FromString(FString::Printf(TEXT("Validation Report Completed in %0.2f secs"), TimeStampValue));
+}
+
+const FText SValidationResultWindow::ErrorCount()
+{
+	return FText::FromString(FString::Printf(
+		TEXT("There are %d issues found %s"),
+		ErrorCountValue, 
+		ErrorCountValue == 0 ? TEXT("") : TEXT(", click \"Resolve Issues\" to fix them")));
+}
+
+const EVisibility SValidationResultWindow::GetVisibility()
+{
+	return (ErrorCountValue == 0) ? EVisibility::Collapsed : EVisibility::Visible;
 }

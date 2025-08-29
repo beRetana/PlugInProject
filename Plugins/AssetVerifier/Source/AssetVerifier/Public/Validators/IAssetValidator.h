@@ -1,6 +1,8 @@
 #pragma once
 
 struct FAssetValidationData;
+struct FAssetValidationReport;
+struct FAssetData;
 class FAssetVerifierSettings;
 
 class IAssetValidator

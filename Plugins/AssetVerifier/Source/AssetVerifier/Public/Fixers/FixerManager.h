@@ -1,6 +1,9 @@
 #pragma once 
+#include "CoreMinimal.h"
+#include "Fixers/IAssetFixer.h"
 
 class FAssetVerifierSettings;
+struct FAssetValidationReport;
 
 class FFixerManager
 {
@@ -13,7 +16,7 @@ public:
 	template<typename TFixer, typename... TArgs>
 	void RegisterFixer(const FName& FixerName, TArgs&&... Arguments)
 	{
-		static_assert(TIsDerivedFrom<TFixer, class IAssetFixer>::IsDerived, "Class must inherit from IAssetFixer");
+		static_assert(TIsDerivedFrom<TFixer, IAssetFixer>::Value, "Class must inherit from IAssetFixer");
 
 		if (FixersMap.Contains(FixerName))
 		{
@@ -21,10 +24,10 @@ public:
 			return;
 		}
 
-		FixersMap.Add(FixerName, MakeUnique<TFixer>(Forward<TArgs>()...));
+		FixersMap.Add(FixerName, MakeUnique<TFixer>(Forward<TArgs>(Arguments)...));
 	}
 
 private:
 	
-	TMap<FName, class IAssetFixer> FixersMap;
+	TMap<FName, TUniquePtr<IAssetFixer>> FixersMap;
 };

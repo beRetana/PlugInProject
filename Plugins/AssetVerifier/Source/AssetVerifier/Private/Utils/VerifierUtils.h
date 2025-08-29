@@ -1,7 +1,5 @@
 #pragma once
 
-#include "FileHelpers.h"
-
 struct FAssetData;
 struct FAssetValidationData;
 

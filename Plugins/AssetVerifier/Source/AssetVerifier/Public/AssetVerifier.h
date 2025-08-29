@@ -30,6 +30,8 @@ private:
 	TSharedPtr<class FValidatorManager> ValidatorManager;
 	TSharedPtr<class FAssetVerifierSettings> VerifierSettings;
 	TSharedPtr<class SWindow> SettingsWindowUI;
+	TSharedPtr<class SWindow> ValidationResultsWindow;
+	// pointer to issues display window
 	
 	FAssetValidationReport CurrentReport;
 	TArray<FAssetData> CurrentAssetBatch;

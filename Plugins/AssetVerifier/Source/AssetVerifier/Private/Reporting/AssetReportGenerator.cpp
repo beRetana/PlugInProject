@@ -233,7 +233,7 @@ void FAssetReportGenerator::ToLog(const FAssetValidationReport& Report, FString&
 	GenerateSummaryReportToLog(Report.Summary, OutLog);
 	GenerateErrorsPerValidatorToLog(Report.ErrorCountPerValidator, OutLog);
 	GenerateErrorsPerAssetToLog(Report.ErrorCountPerAsset, OutLog);
-	GenerateFullReportToLog(Report.ValidationData, OutLog);
+	GenerateFullReportToLog(Report.ValidatorToFixerData, OutLog);
 	OutLog += TEXT(" \n===================================================\n");
 }
 

@@ -10,7 +10,7 @@ void FAssetNamingFixer::Fix(FFixerData& FixerData)
 
 	IAssetTools& AssetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get();
 	
-	for (const auto& ValidationData : FixerData[EValidationResult::Error_3])
+	for (auto& ValidationData : FixerData[EValidationResult::Error_3])
 	{
 		UObject* Asset = ValidationData.Asset->GetAsset();
 		if (Asset == nullptr) continue;
@@ -22,6 +22,7 @@ void FAssetNamingFixer::Fix(FFixerData& FixerData)
 		AssetTools.CreateUniqueAssetName(PackagePath, TEXT(""), NewPath, NewAssetName);
 
 		AssetsToRename.Emplace(Asset, FPaths::GetPath(NewPath), NewAssetName);
+		ValidationData.bCanAutoFix = true;
 	}
 
 	if (AssetsToRename.Num() == 0) return;

@@ -4,7 +4,7 @@
 #include "AssetValidationData.h"
 
 DECLARE_DELEGATE(FOnSaveToFile);
-DECLARE_DELEGATE(FOnCloseWindow);
+DECLARE_DELEGATE(FOnFixIssues);
 
 class SValidationResultWindow : public SCompoundWidget
 {
@@ -14,6 +14,7 @@ public:
 		SLATE_ARGUMENT(FOnSaveToFile, OnSaveToCSV)
 		SLATE_ARGUMENT(FOnSaveToFile, OnSaveToJSON)
 		SLATE_ARGUMENT(FOnSaveToFile, OnStreamToLog)
+		SLATE_ARGUMENT(FOnFixIssues, OnFixIssues)
 	SLATE_END_ARGS()
 
 	void Construct(const FArguments& InArgs);
@@ -23,12 +24,18 @@ private:
 	FOnSaveToFile OnSaveToCSV;
 	FOnSaveToFile OnSaveToJSON;
 	FOnSaveToFile OnStreamToLog;
+	FOnFixIssues OnFixIssues;
 
-	double TimeStampValue;
+	double TimeStampValue{0};
+	int32 ErrorCountValue{0};
 
 	FReply HandleSaveToCSV();
 	FReply HandleSaveToJSON();
 	FReply HandleStreamToLog();
+	FReply HandleIssuesWindow();
+
+	const EVisibility GetVisibility();
 
 	const FText TimeStamp();
+	const FText ErrorCount();
 };

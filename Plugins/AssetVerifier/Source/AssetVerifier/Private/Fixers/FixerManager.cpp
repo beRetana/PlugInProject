@@ -8,7 +8,7 @@ void FFixerManager::ExecuteFixer(const FName& FixerName, FAssetValidationReport&
 	{
 		if (auto* FixerData = Report.ValidatorToFixerData.Find(FixerName))
 		{
-			Fixer->Fix(*FixerData); 
+			(*Fixer)->Fix(*FixerData);
 			return;
 		}
 

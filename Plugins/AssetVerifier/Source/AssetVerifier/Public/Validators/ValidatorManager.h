@@ -1,6 +1,10 @@
 #pragma once
 
-#include "Containers/SortedMap.h"
+#include "CoreMinimal.h"
+#include "Validators/IAssetValidator.h"
+
+struct FAssetValidationReport;
+struct FAssetData;
 
 class FValidatorManager
 {
@@ -13,7 +17,7 @@ public:
 	template<typename TValidator, typename... TArgs>
 	void RegisterValidator(const FName& ValidatorName, TArgs&&... Arguments)
 	{
-		static_assert(TIsDerivedFrom<TValidator, class IAssetValidator>::IsDerived, "Class must inherit from IAssetValidator");
+		static_assert(TIsDerivedFrom<TValidator, IAssetValidator>::IsDerived, "Class must inherit from IAssetValidator");
 
 		if (ValidatorsMap.Contains(ValidatorName))
 		{
@@ -21,10 +25,10 @@ public:
 			return;
 		}
 
-		ValidatorsMap.Add(ValidatorName, MakeUnique<TValidator>(Forward<TArgs>()...));
+		ValidatorsMap.Add(ValidatorName, MakeUnique<TValidator>(Forward<TArgs>(Arguments)...));
 	}
 
 private:
 
-	TMap<FName, TUniquePtr<class IAssetValidator>> ValidatorsMap;
+	TMap<FName, TUniquePtr<IAssetValidator>> ValidatorsMap;
 };

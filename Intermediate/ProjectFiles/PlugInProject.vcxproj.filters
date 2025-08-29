@@ -87,6 +87,9 @@
     <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\UI\AssetVerifierSettingsWindow.cpp">
       <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Private\UI</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\UI\IssueRowWidget.cpp">
+      <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Private\UI</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\UI\ValidationReportWindow.cpp">
       <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Private\UI</Filter>
     </ClCompile>
@@ -151,6 +154,9 @@
       <UniqueIdentifier>{E9769E19-212D-3F7C-8262-2CC4E7DEA4F3}</UniqueIdentifier>
     </Filter>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\UI\AssetVerifierSettingsWindow.h">
+      <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Public\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\UI\IssueRowWidget.h">
       <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Public\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\UI\ValidationResultWindow.h">
