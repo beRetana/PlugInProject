@@ -42,6 +42,7 @@ public class AssetVerifier : ModuleRules
 				"UnrealEd",
 				"LevelEditor",
 				"ToolMenus",
+				"SourceControl",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

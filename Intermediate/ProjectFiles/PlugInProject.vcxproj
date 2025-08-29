@@ -552,6 +552,11 @@
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
+    <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\Utils\VerifierUtils.cpp">
+      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\Utils\VerifierUtils.h"/>
     <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\Validators\AssetFileSizeValidator.cpp">
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>

@@ -90,6 +90,15 @@
     <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\UI\ValidationReportWindow.cpp">
       <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Private\UI</Filter>
     </ClCompile>
+    <Filter Include="Plugins\AssetVerifier\Source\AssetVerifier\Private\Utils">
+      <UniqueIdentifier>{703DBEED-F625-3E85-B7E4-CC40C09F5C28}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\Utils\VerifierUtils.cpp">
+      <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Private\Utils</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\Utils\VerifierUtils.h">
+      <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Private\Utils</Filter>
+    </ClInclude>
     <Filter Include="Plugins\AssetVerifier\Source\AssetVerifier\Private\Validators">
       <UniqueIdentifier>{080F581C-9694-389C-926B-7A597A069E9D}</UniqueIdentifier>
     </Filter>
