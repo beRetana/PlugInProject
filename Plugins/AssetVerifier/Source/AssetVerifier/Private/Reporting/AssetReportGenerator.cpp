@@ -87,7 +87,7 @@ void FAssetReportGenerator::GenerateFullReportToCSV(const TMap<FName, FFixerData
 				*Data.Asset->AssetName.ToString(),
 				*Data.Asset->GetObjectPathString(),
 				*Data.ValidatorName.ToString(),
-				*EnumResultToString(Data.Result),
+				*Data.ResultString(),
 				*Data.Message);
 		}
 	}
@@ -169,7 +169,7 @@ void FAssetReportGenerator::GenerateFullReportToJSON(const TMap<FName, FFixerDat
 			OutJSON += FString::Printf(TEXT("\t\t\t\t\"AssetName\": \"%s\",\n"), *AssetData.Asset->AssetName.ToString());
 			OutJSON += FString::Printf(TEXT("\t\t\t\t\"AssetPath\": \"%s\",\n"), *AssetData.Asset->GetObjectPathString());
 			OutJSON += FString::Printf(TEXT("\t\t\t\t\"ValidatorName\": \"%s\",\n"), *AssetData.ValidatorName.ToString());
-			OutJSON += FString::Printf(TEXT("\t\t\t\t\"Result\": \"%s\",\n"), *EnumResultToString(AssetData.Result));
+			OutJSON += FString::Printf(TEXT("\t\t\t\t\"Result\": \"%s\",\n"), *AssetData.ResultString());
 			OutJSON += FString::Printf(TEXT("\t\t\t\t\"Message\": \"%s\"\n"), *AssetData.Message);
 
 			OutJSON += (AssetDataIndex < Fixer.Value.AllValidationData.Num() - 1 && FixerIndex < ValidationData.Num() - 1) ? TEXT("\t\t\t},\n") : TEXT("\t\t\t}\n");
@@ -254,26 +254,8 @@ void FAssetReportGenerator::GenerateFullReportToLog(const TMap<FName, FFixerData
 	{
 		for (const auto& Row : DataGroup.Value.AllValidationData)
 		{
-			FString ResultString;
-
-			switch (Row.Result)
-			{
-			case EValidationResult::Passed_0:
-				ResultString = TEXT("Passed");
-				break;
-			case EValidationResult::Information_1:
-				ResultString = TEXT("Information");
-				break;
-			case EValidationResult::Warning_2:
-				ResultString = TEXT("Warning");
-				break;
-			case EValidationResult::Error_3:
-				ResultString = TEXT("Error");
-				break;
-			}
-
 			OutLog += FString::Printf(TEXT("[%s] | %s | %s |\n"),
-				*ResultString,
+				*Row.ResultString(),
 				*Row.Asset->AssetName.ToString(),
 				*Row.ValidatorName.ToString());
 			OutLog += FString::Printf(TEXT("Asset Path: %s\n"), *Row.Asset->GetObjectPathString());
@@ -383,21 +365,4 @@ bool FAssetReportGenerator::SaveSmallReportToJSONFile(const FAssetValidationRepo
 	FString JSON;
 	ToJSON(Report, JSON);
 	return SaveStringAtomicallyToFile(JSON, Directory / TEXT("ValidationReport.json"));
-}
-
-FString FAssetReportGenerator::EnumResultToString(EValidationResult Result)
-{
-	switch (Result)
-	{
-		case EValidationResult::Passed_0:
-			return TEXT("Passed");
-		case EValidationResult::Information_1:
-			return TEXT("Information");
-		case EValidationResult::Warning_2:
-			return TEXT("Warning");
-		case EValidationResult::Error_3:
-			return TEXT("Error");
-		default:
-			return TEXT("Unknown");
-	}
 }

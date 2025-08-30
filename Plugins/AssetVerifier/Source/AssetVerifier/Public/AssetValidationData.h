@@ -25,8 +25,27 @@ struct FAssetValidationData
 
 	bool bCanAutoFix{ false };
 
+	bool bSelectedFix{ false };
+
 	FAssetValidationData() : Result(EValidationResult::Passed_0)
 	{
+	}
+
+	FString ResultString() const
+	{
+		switch (Result)
+		{
+			case EValidationResult::Passed_0:
+				return TEXT("Passed");
+			case EValidationResult::Information_1:
+				return TEXT("Information");
+			case EValidationResult::Warning_2:
+				return TEXT("Warning");
+			case EValidationResult::Error_3:
+				return TEXT("Error");
+			default:
+				return TEXT("Unknown");
+		}
 	}
 };
 

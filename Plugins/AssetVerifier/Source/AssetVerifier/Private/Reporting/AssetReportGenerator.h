@@ -28,8 +28,6 @@ public:
 
 	static bool StreamSmallReportToLog(const FAssetValidationReport& Report);
 
-	static FString EnumResultToString(EValidationResult Result);
-
 private:
 
 	static void GenerateSummaryReportToCSV(const FValidationReportSummary& Summary, FString& OutCSV);

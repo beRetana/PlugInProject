@@ -552,6 +552,10 @@
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
+    <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\UI\IssuesDisplayView.cpp">
+      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
     <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\UI\ValidationReportWindow.cpp">
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(ClCompile_ForcedIncludeFiles)</ForcedIncludeFiles>
@@ -588,6 +592,7 @@
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Fixers\IAssetFixer.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\UI\AssetVerifierSettingsWindow.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\UI\IssueRowWidget.h"/>
+    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\UI\IssuesDisplayView.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\UI\ValidationResultWindow.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Validators\AssetFileSizeValidator.h"/>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\Validators\AssetLODValidator.h"/>

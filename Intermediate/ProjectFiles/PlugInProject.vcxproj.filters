@@ -90,6 +90,9 @@
     <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\UI\IssueRowWidget.cpp">
       <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Private\UI</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\UI\IssuesDisplayView.cpp">
+      <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Private\UI</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Private\UI\ValidationReportWindow.cpp">
       <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Private\UI</Filter>
     </ClCompile>
@@ -157,6 +160,9 @@
       <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Public\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\UI\IssueRowWidget.h">
+      <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Public\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\UI\IssuesDisplayView.h">
       <Filter>Plugins\AssetVerifier\Source\AssetVerifier\Public\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Plugins\AssetVerifier\Source\AssetVerifier\Public\UI\ValidationResultWindow.h">
