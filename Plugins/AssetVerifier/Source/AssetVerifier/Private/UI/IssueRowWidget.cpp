@@ -4,13 +4,13 @@ void SIssueRowWidget::Construct(const FArguments& InArgs, const TSharedRef<STabl
 {
 	ValidationData = InArgs._ValidationData;
 
-	SMultiColumnTableRow<ValidationDataRef>::Construct(
-		SMultiColumnTableRow<ValidationDataRef>::FArguments(), Owner);
+	SMultiColumnTableRow<DataPtr>::Construct(
+		SMultiColumnTableRow<DataPtr>::FArguments(), Owner);
 }
 
 TSharedRef<SWidget> SIssueRowWidget::GenerateWidgetForColumn(const FName& ColumnName)
 {
-	if (ColumnName == "Name")
+	if (ColumnName == "Asset Name")
 	{
 		return SNew(STextBlock).Text(FText::FromName(ValidationData->Asset->AssetName));
 	}
@@ -31,7 +31,7 @@ TSharedRef<SWidget> SIssueRowWidget::GenerateWidgetForColumn(const FName& Column
 		return SNew(STextBlock).Text(FText::FromName(ValidationData->FixerName));
 	}
 
-	if (ColumnName == "Auto-fixable")
+	if (ColumnName == "Auto-Fixable")
 	{
 		return SNew(STextBlock).Text(FText::FromString(ValidationData->bCanAutoFix ? TEXT("Yes") : TEXT("No")));
 	}

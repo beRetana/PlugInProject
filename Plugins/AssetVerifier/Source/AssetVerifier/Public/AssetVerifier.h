@@ -4,6 +4,8 @@
 
 #include "AssetValidationData.h"
 
+class SWindow;
+
 class FAssetVerifier : public IModuleInterface
 {
 public:
@@ -23,15 +25,16 @@ private:
 	void SetUpValidationData(TArray<TArray<FAssetValidationData>>& OutData);
 	void ShowReportWindow(const FAssetValidationReport& Report, double TimeElapsed);
 	void OpenSettingsWindow();
+	void CreateIssuesWindow(const FAssetValidationReport& Report);
 	void RunValidator(const FName& ValidatorName);
 	void PopulateCommands(UToolMenu* InMenu);
 
 	TSharedPtr<FUICommandList> Commands;
 	TSharedPtr<class FValidatorManager> ValidatorManager;
 	TSharedPtr<class FAssetVerifierSettings> VerifierSettings;
-	TSharedPtr<class SWindow> SettingsWindowUI;
-	TSharedPtr<class SWindow> ValidationResultsWindow;
-	// pointer to issues display window
+	TSharedPtr<SWindow> SettingsWindowUI;
+	TSharedPtr<SWindow> ValidationResultsWindow;
+	TSharedPtr<SWindow> IssuesViewWindow;
 	
 	FAssetValidationReport CurrentReport;
 	TArray<FAssetData> CurrentAssetBatch;

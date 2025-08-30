@@ -5,9 +5,11 @@
 void SValidationResultWindow::Construct(const FArguments& InArgs)
 {
 	TimeStampValue = InArgs._TimeStamp;
+	ErrorCountValue = InArgs._ErrorCountNum;
 	OnSaveToCSV = InArgs._OnSaveToCSV;
 	OnSaveToJSON = InArgs._OnSaveToJSON;
 	OnStreamToLog = InArgs._OnStreamToLog;
+	OnFixIssues = InArgs._OnFixIssues;
 
 	ChildSlot
 		[

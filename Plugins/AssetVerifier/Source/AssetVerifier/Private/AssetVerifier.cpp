@@ -8,6 +8,7 @@
 #include "AssetVerifierCommands.h"
 #include "UI/AssetVerifierSettingsWindow.h"
 #include "UI/ValidationResultWindow.h"
+#include "UI/IssuesDisplayView.h"
 #include "AssetVerifierSettings.h"
 #include "Validators/AssetNamingValidator.h"
 
@@ -186,7 +187,7 @@ void FAssetVerifier::OpenSettingsWindow()
 }
 
 void FAssetVerifier::ShowReportWindow(const FAssetValidationReport& Report, double TimeElapsed)
-{
+{ 
 	auto SaveToCSV = FSimpleDelegate::CreateLambda([Report]()
 		{
 			FAssetReportGenerator::SaveSmallReportToCSVFile(Report);
@@ -202,18 +203,51 @@ void FAssetVerifier::ShowReportWindow(const FAssetValidationReport& Report, doub
 			FAssetReportGenerator::StreamSmallReportToLog(Report);
 		});
 
+	auto OpenIssuesWindow = FSimpleDelegate::CreateLambda([Report, this]() 
+		{
+			CreateIssuesWindow(Report);
+		});
+
 	ValidationResultsWindow = SNew(SWindow)
 		.Title(LOCTEXT("AssetValidationReport", "Asset Validation Report"))
 		.SizingRule(ESizingRule::Autosized)
 		[
-			SNew(SValidationResultWindow).TimeStamp(TimeElapsed)
+			SNew(SValidationResultWindow)
+				.TimeStamp(TimeElapsed)
+				.ErrorCountNum(Report.Summary.Errors)
 				.OnSaveToCSV(SaveToCSV)
 				.OnSaveToJSON(SaveToJSON)
 				.OnStreamToLog(SaveToLog)
+				.OnFixIssues(OpenIssuesWindow)
 		]
 		.SupportsMaximize(false)
 		.SupportsMinimize(true);
 	FSlateApplication::Get().AddWindow(ValidationResultsWindow.ToSharedRef());
+}
+
+void FAssetVerifier::CreateIssuesWindow(const FAssetValidationReport& Report)
+{
+	TArray<TSharedPtr<FAssetValidationData>> DataList;
+
+	for (const auto& FixerData : Report.ValidatorToFixerData)
+	{
+		for (const auto& Issue : FixerData.Value.AllValidationData)
+		{
+			DataList.Add(MakeShared<FAssetValidationData>(Issue));
+		}
+	}
+
+	IssuesViewWindow = SNew(SWindow)
+		.Title(FText::FromString("Issues View Table"))
+		.SizingRule(ESizingRule::UserSized)
+		[
+			SNew(SIssueDisplayView)
+				.DataList(DataList)
+		]
+		.SupportsMaximize(true)
+		.SupportsMinimize(true);
+
+	FSlateApplication::Get().AddWindow(IssuesViewWindow.ToSharedRef());
 }
 
 #undef LOCTEXT_NAMESPACE

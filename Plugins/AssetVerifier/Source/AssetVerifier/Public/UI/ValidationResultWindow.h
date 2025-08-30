@@ -11,6 +11,7 @@ class SValidationResultWindow : public SCompoundWidget
 public:
 	SLATE_BEGIN_ARGS(SValidationResultWindow) {}
 		SLATE_ARGUMENT(double, TimeStamp)
+		SLATE_ARGUMENT(uint32, ErrorCountNum)
 		SLATE_ARGUMENT(FOnSaveToFile, OnSaveToCSV)
 		SLATE_ARGUMENT(FOnSaveToFile, OnSaveToJSON)
 		SLATE_ARGUMENT(FOnSaveToFile, OnStreamToLog)
