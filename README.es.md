@@ -1,3 +1,5 @@
+# AssetVerifier – Unreal Engine Asset Validation Plugin 
+
 **AssetVerifier** es un plugin para Unreal Engine 5.6+ que valida y corrige automáticamente los assets del Content Browser.
 Su objetivo es mantener estándares de calidad y consistencia en proyectos grandes, inspirado en frameworks de validación usados en estudios AAA.
 
@@ -67,6 +69,6 @@ UCI – Game Design & Interactive Media + Data Science
 
 Tools & Systems Programmer
 
-LinkedIn
+[LinkedIn](https://www.linkedin.com/in/brandon-retana-3a7003295/)
 
 Licencia: MIT – libre uso y modificación.
