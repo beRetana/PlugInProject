@@ -42,14 +42,37 @@ Flow example:
 ## Project Structure
 
     AssetVerifier/
-    │── Source/
-    │   ├── AssetVerifier/               # Main module
-    │   ├── Public/                      # Public headers
-    │   └── Private/                     # Internal implementation
-    │
-    │── Resources/                       # Icons/UI
-    │── Config/                          # Plugin configuration
-    │── AssetVerifier.uplugin            # Plugin descriptor
+    │── Config/                          # Project configuration
+    │── Source/                          # Main module
+    │── Plugin/
+        │── AssetVerifier/
+            │── Resources/
+            │── Source/
+                │──AssetVerifier/
+                    │── Private/
+                        │── Fixers/
+                            │── AssetLODFixer.cpp
+                            │── AssetNamingFixer.cpp
+                            │── FixerManager.cpp
+                        │── Reporting/
+                            │── AssetReportGenerator.cpp
+                            │── AssetReportGenerator.h
+                        │── UI/
+                            │── AssetVerifierSettingsWindow.cpp
+                            │── IssueRowWidget.cpp
+                            │── IssuesDisplayView.cpp
+                            │── ValidationReportWindow.cpp
+                        │── Utils/
+                            │── VerifierUtils.cpp
+                            │── Verifierutils.h
+                        │── Validators/
+                            │── AssetFileSizeValidator.cpp
+                            │── AssetLODValidator.cpp
+                            │──
+                    │── Plublic/
+            │── AssetVerifier.uplugin    # Plug-in descriptor
+    │── Saved/                           # Report Files; CSV & JSON
+    │── AssetVerifier.uplugin            # Project descriptor
 
 
 ## Development
