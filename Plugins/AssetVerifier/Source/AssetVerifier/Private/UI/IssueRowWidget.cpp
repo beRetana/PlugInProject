@@ -5,43 +5,77 @@ void SIssueRowWidget::Construct(const FArguments& InArgs, const TSharedRef<STabl
 	ValidationData = InArgs._ValidationData;
 
 	SMultiColumnTableRow<DataPtr>::Construct(
-		SMultiColumnTableRow<DataPtr>::FArguments(), Owner);
+		SMultiColumnTableRow<DataPtr>::FArguments().Padding(FMargin(1.0f, 1.0f)), Owner);
 }
 
 TSharedRef<SWidget> SIssueRowWidget::GenerateWidgetForColumn(const FName& ColumnName)
 {
-	if (ColumnName == "Asset Name")
+	if (ColumnName == ASSET)
 	{
-		return SNew(STextBlock).Text(FText::FromName(ValidationData->Asset->AssetName));
+		return SNew(SBox).Padding(5).VAlign(VAlign_Center).HAlign(HAlign_Left)
+			[
+				SNew(STextBlock).
+					Text(FText::FromName(ValidationData->Asset->AssetName))
+			];
 	}
 
-	if (ColumnName == "Result")
+	if (ColumnName == RESULT)
 	{
-		return SNew(STextBlock).Text(FText::FromString(ValidationData->ResultString()))
-			.ColorAndOpacity(RedFontColor);
+		return SNew(SBox).Padding(5).VAlign(VAlign_Center).HAlign(HAlign_Left)
+			[
+				SNew(STextBlock).Text(FText::FromString(ValidationData->ResultString()))
+					.ColorAndOpacity(RedFontColor)
+			];
 	}
 
-	if (ColumnName == "Validator")
+	if (ColumnName == VALIDATOR)
 	{
-		return SNew(STextBlock).Text(FText::FromName(ValidationData->ValidatorName));
+		return SNew(SBox).Padding(5).VAlign(VAlign_Center).HAlign(HAlign_Left)
+			[
+				SNew(STextBlock).Text(FText::FromName(ValidationData->ValidatorName))
+			];
 	}
 
-	if (ColumnName == "Fixer")
+	if (ColumnName == FIXER)
 	{
-		return SNew(STextBlock).Text(FText::FromName(ValidationData->FixerName));
+		return SNew(SBox).Padding(5).VAlign(VAlign_Center).HAlign(HAlign_Left)
+			[
+				SNew(STextBlock).Text(FText::FromName(ValidationData->FixerName))
+			];
 	}
 
-	if (ColumnName == "Auto-Fixable")
+	if (ColumnName == AUTO_FIX)
 	{
-		return SNew(STextBlock).Text(FText::FromString(ValidationData->bCanAutoFix ? TEXT("Yes") : TEXT("No")));
+		return SNew(SBox).Padding(5).VAlign(VAlign_Center).HAlign(HAlign_Left)
+			[
+				SNew(STextBlock).Text(FText::FromString(ValidationData->bCanAutoFix ? TEXT("Yes") : TEXT("No")))
+			];
 	}
 
-	if (ColumnName == "Fix")
+	if (ColumnName == FIX)
 	{
-		return SNew(SCheckBox).IsChecked_Lambda([this]() 
-			{return ValidationData->bSelectedFix ? ECheckBoxState::Checked : ECheckBoxState::Unchecked; })
-			.OnCheckStateChanged_Lambda([this](ECheckBoxState NewState)
-				{ ValidationData->bSelectedFix = NewState == ECheckBoxState::Checked; });
+		if (ValidationData->bCanAutoFix) ValidationData->bSelectedFix = true;
+
+		return SNew(SBox)
+			.Padding(5)
+			.HAlign(HAlign_Center)
+			.VAlign(VAlign_Center)
+			[
+				SNew(SCheckBox)
+					.HAlign(HAlign_Center)
+					.IsEnabled_Lambda([this]()
+						{
+							return ValidationData->bCanAutoFix;
+						})
+					.IsChecked_Lambda([this]()
+						{
+							return ValidationData->bSelectedFix ? ECheckBoxState::Checked : ECheckBoxState::Unchecked; 
+						})
+					.OnCheckStateChanged_Lambda([this](ECheckBoxState NewState)
+						{ 
+							ValidationData->bSelectedFix = NewState == ECheckBoxState::Checked; 
+						})
+			];
 	}
 
 	return SNullWidget::NullWidget;

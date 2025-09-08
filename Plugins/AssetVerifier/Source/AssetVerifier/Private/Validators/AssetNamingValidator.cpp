@@ -59,6 +59,8 @@ void FAssetNamingValidator::FillValidationData(const FAssetData& Asset, FAssetVa
 		
 		++InvalidAssetsNum;
 		OutValidationData.FixerName = GetFixerName();
+		OutValidationData.FixData = NameConventionPrefix;
+		OutValidationData.bCanAutoFix = true; 
 		OutValidationData.Result = EValidationResult::Error_3;
 		OutValidationData.Message = FString::Printf(
 			TEXT("Asset %s does not follow the naming convention: %s"), 

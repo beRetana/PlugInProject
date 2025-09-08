@@ -27,3 +27,11 @@ void FFixerManager::ExecuteFixers(const TArray<FName>& FixerNames, FAssetValidat
 		ExecuteFixer(FixerName, Report);
 	}
 }
+
+void FFixerManager::ExecuteAllFixers(FAssetValidationReport& Report)
+{
+	for (const auto& Fixer : FixersMap)
+	{
+		ExecuteFixer(Fixer.Key, Report);
+	}
+}

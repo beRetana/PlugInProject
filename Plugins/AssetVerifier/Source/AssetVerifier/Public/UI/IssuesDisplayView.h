@@ -4,10 +4,13 @@
 #include "AssetValidationData.h"
 #include "UI/IssueRowWidget.h"
 
+DECLARE_DELEGATE(FOnFixSelected);
+
 class SIssueDisplayView : public SCompoundWidget
 {
 public:
 	SLATE_BEGIN_ARGS(SIssueDisplayView) {}
+		SLATE_ARGUMENT(FOnFixSelected, OnFixSelected)
 		SLATE_ARGUMENT(TArray<DataPtr>, DataList)
 	SLATE_END_ARGS()
 
@@ -21,6 +24,10 @@ private:
 	void ApplyFilter(const FString& FilterKey);
 	void OnSearchKeyChanged(const FText& NewSearchKey);
 	bool ContainsFilterKey(const DataPtr& Data);
+	FReply OnFixSelectedIssues();
+
+private:
+	const FName RowName_AssetName = TEXT("Asset Name");
 
 	TArray<DataPtr> AllDataList;
 	TArray<DataPtr> FilteredDataList;
@@ -30,8 +37,10 @@ private:
 	FString CurrentFilterKey;
 
 	const FString PannelDescription = TEXT(
-		"Search through all the reported issues by"
+		"Search through all the reported issues by "
 		"the validators and if allowed you can select "
 		"to resolve issues. Once you have selected the "
 		"issues that should be fixed press the fix button.");
+	
+	FOnFixSelected OnFixSelectedAction;
 };

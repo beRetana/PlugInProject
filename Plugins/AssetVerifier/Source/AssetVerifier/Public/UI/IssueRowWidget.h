@@ -16,6 +16,13 @@ public:
 
 	virtual TSharedRef<SWidget> GenerateWidgetForColumn(const FName& ColumnName) override;
 
+	static inline FName ASSET = "Asset Name";
+	static inline FName RESULT = "Result";
+	static inline FName VALIDATOR = "Validator";
+	static inline FName FIXER = "Fixer";
+	static inline FName AUTO_FIX = "Auto Fix-able";
+	static inline FName FIX = "Select Fix";
+
 private:
 	DataPtr ValidationData;
 

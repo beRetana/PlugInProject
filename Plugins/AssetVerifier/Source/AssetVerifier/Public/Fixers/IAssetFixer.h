@@ -9,6 +9,6 @@ public:
 	virtual void Fix(FFixerData& Asset) = 0;
 	virtual FName GetFixerName() const = 0;
 
-private:
+protected:
 	IAssetFixer() = default;
 };

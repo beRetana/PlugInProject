@@ -118,6 +118,7 @@ struct FAssetValidationReport
 		ErrorCountPerValidator.Reset();
 		ErrorCountPerAsset.Reset();
 		Summary.Reset();
+		Assets.Reset();
 	}
 
 	FAssetValidationReport() = default;

@@ -11,6 +11,7 @@ public:
 
 	void ExecuteFixer(const FName& FixerName, FAssetValidationReport& Report);
 	void ExecuteFixers(const TArray<FName>& FixerNames, FAssetValidationReport& Report);
+	void ExecuteAllFixers(FAssetValidationReport& Report);
 	void ApplySettings(const FAssetVerifierSettings& Settings);
 
 	template<typename TFixer, typename... TArgs>

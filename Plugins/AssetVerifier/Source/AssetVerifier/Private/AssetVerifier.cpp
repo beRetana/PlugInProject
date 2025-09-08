@@ -1,16 +1,24 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "AssetVerifier.h"
+
 #include "Validators/ValidatorManager.h"
+#include "Validators/AssetNamingValidator.h"
+
+#include "Fixers/FixerManager.h"
+#include "Fixers/AssetNamingFixer.h"
+
 #include "Reporting/AssetReportGenerator.h"
-#include "AssetValidationData.h"
-#include "AssetScopeBuilder.h"
-#include "AssetVerifierCommands.h"
+
 #include "UI/AssetVerifierSettingsWindow.h"
 #include "UI/ValidationResultWindow.h"
 #include "UI/IssuesDisplayView.h"
+
 #include "AssetVerifierSettings.h"
-#include "Validators/AssetNamingValidator.h"
+#include "AssetValidationData.h"
+#include "AssetScopeBuilder.h"
+#include "AssetVerifierCommands.h"
+#include "Misc/MessageDialog.h"
 
 #define LOCTEXT_NAMESPACE "FAssetVerifierModule"
 
@@ -39,10 +47,12 @@ void FAssetVerifier::SetUpDependencies()
 {
 	Commands = MakeShareable(new FUICommandList);
 	ValidatorManager = MakeShareable(new FValidatorManager);
+	FixerManager = MakeShareable(new FFixerManager);
 	VerifierSettings = MakeShareable(new FAssetVerifierSettings);
 
 	VerifierSettings->OnSettingsChanged.AddRaw(this, &FAssetVerifier::ApplySettings);
 	ValidatorManager->RegisterValidator<FAssetNamingValidator>(NamingValidatorName, NamingFixerName);
+	FixerManager->RegisterFixer<FAssetNamingFixer>(NamingFixerName);
 }
 
 /// <summary>
@@ -239,15 +249,42 @@ void FAssetVerifier::CreateIssuesWindow(const FAssetValidationReport& Report)
 
 	IssuesViewWindow = SNew(SWindow)
 		.Title(FText::FromString("Issues View Table"))
+		.ClientSize(FVector2d(1000, 500))
+		.MinHeight(300.f)
+		.MinWidth(600.f)
 		.SizingRule(ESizingRule::UserSized)
 		[
-			SNew(SIssueDisplayView)
-				.DataList(DataList)
+			SNew(SBox)
+				[
+					SNew(SIssueDisplayView)
+						.DataList(DataList)
+						.OnFixSelected(FSimpleDelegate::CreateLambda([this]() { RunFixer(); }))
+				]
 		]
 		.SupportsMaximize(true)
 		.SupportsMinimize(true);
 
 	FSlateApplication::Get().AddWindow(IssuesViewWindow.ToSharedRef());
+}
+
+void FAssetVerifier::RunFixer()
+{
+	const auto UserAnswer = FMessageDialog::Open(
+			EAppMsgType::OkCancel, 
+			LOCTEXT("ConfirmFixer", "Running Fixers might change assets irreversibly.\n Do you still want to proceed?"),
+			LOCTEXT("TitleConfirmFixer","Confirmation Needed!"));
+
+	if (UserAnswer == EAppReturnType::Cancel) return;
+
+	if (!FixerManager.IsValid())
+	{
+		UE_LOG(LogTemp, Error, TEXT("Missing pointer, the fixer manager was not set up properly"));
+		return;
+	}
+	
+	ValidationResultsWindow->RequestDestroyWindow();
+	IssuesViewWindow->RequestDestroyWindow();
+	FixerManager->ExecuteAllFixers(CurrentReport);
 }
 
 #undef LOCTEXT_NAMESPACE

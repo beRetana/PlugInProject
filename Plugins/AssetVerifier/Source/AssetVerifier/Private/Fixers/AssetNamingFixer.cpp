@@ -34,5 +34,5 @@ void FAssetNamingFixer::Fix(FFixerData& FixerData)
 
 FName FAssetNamingFixer::GetFixerName() const
 {
-	return FName(FIXER_NAME);
+	return FixerName;
 }

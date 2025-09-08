@@ -27,18 +27,22 @@ private:
 	void OpenSettingsWindow();
 	void CreateIssuesWindow(const FAssetValidationReport& Report);
 	void RunValidator(const FName& ValidatorName);
+	void RunFixer();
 	void PopulateCommands(UToolMenu* InMenu);
+
+private:
+	FAssetValidationReport CurrentReport;
 
 	TSharedPtr<FUICommandList> Commands;
 	TSharedPtr<class FValidatorManager> ValidatorManager;
+	TSharedPtr<class FFixerManager> FixerManager;
 	TSharedPtr<class FAssetVerifierSettings> VerifierSettings;
 	TSharedPtr<SWindow> SettingsWindowUI;
 	TSharedPtr<SWindow> ValidationResultsWindow;
 	TSharedPtr<SWindow> IssuesViewWindow;
-	
-	FAssetValidationReport CurrentReport;
+
 	TArray<FAssetData> CurrentAssetBatch;
 
-	const FName NamingValidatorName = TEXT("NamingValidator");
-	const FName NamingFixerName = TEXT("NamingFixer");
+	const FName NamingValidatorName = TEXT("Naming Validator");
+	const FName NamingFixerName = TEXT("Naming Fixer");
 };
