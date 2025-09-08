@@ -362,8 +362,11 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
+
+
 # ----- Unreal/UBT transient -----
 Binaries/
+Content/
 Intermediate/
 DerivedDataCache/
 Saved/
@@ -408,3 +411,13 @@ Saved/Logs/
 .DS_Store
 Thumbs.db
 desktop.ini
+Saved/AutoScreenshot.png
+Saved/Config/WindowsEditor/EditorPerProjectUserSettings.ini
+Saved/webcache_4430/Cache/data_0
+Saved/webcache_4430/Cache/data_1
+Saved/webcache_4430/Cache/data_3
+Saved/webcache_4430/Local Storage/leveldb/LOG
+Saved/webcache_4430/Network Persistent State
+Saved/webcache_4430/Session Storage/LOG
+Saved/webcache_4430/TransportSecurity
+Saved/webcache_4430/Visited Links

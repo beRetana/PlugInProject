@@ -14,6 +14,8 @@
 #include "UI/ValidationResultWindow.h"
 #include "UI/IssuesDisplayView.h"
 
+#include "Utils/VerifierUtils.h"
+
 #include "AssetVerifierSettings.h"
 #include "AssetValidationData.h"
 #include "AssetScopeBuilder.h"
@@ -271,7 +273,7 @@ void FAssetVerifier::RunFixer()
 {
 	const auto UserAnswer = FMessageDialog::Open(
 			EAppMsgType::OkCancel, 
-			LOCTEXT("ConfirmFixer", "Running Fixers might change assets irreversibly.\n Do you still want to proceed?"),
+			LOCTEXT("ConfirmFixer", "Running Fixers might change assets irreversibly.\nDo you still want to proceed?"),
 			LOCTEXT("TitleConfirmFixer","Confirmation Needed!"));
 
 	if (UserAnswer == EAppReturnType::Cancel) return;
@@ -285,6 +287,9 @@ void FAssetVerifier::RunFixer()
 	ValidationResultsWindow->RequestDestroyWindow();
 	IssuesViewWindow->RequestDestroyWindow();
 	FixerManager->ExecuteAllFixers(CurrentReport);
+	FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("FixerResult", "Process has been completed successfully!"));
+	FVerifierUtils::SaveDirtyAssets(CurrentReport.Assets);
+	CurrentReport.Reset();
 }
 
 #undef LOCTEXT_NAMESPACE
