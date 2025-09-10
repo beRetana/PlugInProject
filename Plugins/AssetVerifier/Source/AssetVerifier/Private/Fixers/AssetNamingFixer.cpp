@@ -15,7 +15,7 @@ void FAssetNamingFixer::Fix(FFixerData& FixerData)
 		UObject* Asset = ValidationData.Asset->GetAsset();
 		if (Asset == nullptr) continue;
 
-		const FString NewName{ ValidationData.FixData + TEXT("_") + ValidationData.Asset->AssetName.ToString() };
+		const FString NewName{ ValidationData.FixData + ValidationData.Asset->AssetName.ToString() };
 		const FString PackagePath{ ValidationData.Asset->PackagePath.ToString() / NewName};
 
 		FString NewPath, NewAssetName;

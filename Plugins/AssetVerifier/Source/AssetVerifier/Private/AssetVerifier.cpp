@@ -163,6 +163,7 @@ void FAssetVerifier::ShutdownModule()
 void FAssetVerifier::RunValidator(const FName& ValidatorName)
 {
 	double StartTime = FPlatformTime::Seconds();
+	CurrentReport.Reset();
 	FAssetScopeBuilder::BuildScopeAll(CurrentReport.Assets);
 	ValidatorManager->ExecuteValidator(ValidatorName, CurrentReport.Assets, CurrentReport);
 	FAssetReportGenerator::GenerateReport(CurrentReport);

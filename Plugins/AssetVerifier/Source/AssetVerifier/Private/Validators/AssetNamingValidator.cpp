@@ -42,6 +42,8 @@ void FAssetNamingValidator::FillValidationData(const FAssetData& Asset, FAssetVa
 
 	FString AssetNameStr = Asset.AssetName.ToString();
 
+	UE_LOG(LogTemp, Warning, TEXT("Registering: %s"), *AssetNameStr);
+
 	if (AssetNameStr.StartsWith(NameConventionPrefix))
 	{
 		OutValidationData.Result = EValidationResult::Passed_0;
