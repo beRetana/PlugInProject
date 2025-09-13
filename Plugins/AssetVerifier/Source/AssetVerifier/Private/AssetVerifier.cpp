@@ -162,6 +162,12 @@ void FAssetVerifier::ShutdownModule()
 /// </summary>
 void FAssetVerifier::RunValidator(const FName& ValidatorName)
 {
+	if (ValidationResultsWindow.IsValid())
+	{
+		ValidationResultsWindow->BringToFront(true);
+		return;
+	}
+
 	double StartTime = FPlatformTime::Seconds();
 	CurrentReport.Reset();
 	FAssetScopeBuilder::BuildScopeAll(CurrentReport.Assets);
@@ -183,6 +189,7 @@ void FAssetVerifier::OpenSettingsWindow()
 
 	if (SettingsWindowUI.IsValid())
 	{
+		UE_LOG(LogTemp, Warning, TEXT("The window already exists"));
 		SettingsWindowUI->BringToFront(true);
 		return;
 	}
@@ -195,6 +202,11 @@ void FAssetVerifier::OpenSettingsWindow()
 		]
 		.SupportsMaximize(true)
 		.SupportsMinimize(true);
+
+	SettingsWindowUI->SetOnWindowClosed(FOnWindowClosed::CreateLambda([this](const TSharedRef<SWindow>&) 
+		{
+			SettingsWindowUI.Reset();
+		}));
 	
 	FSlateApplication::Get().AddWindow(SettingsWindowUI.ToSharedRef());
 }
@@ -235,11 +247,23 @@ void FAssetVerifier::ShowReportWindow(const FAssetValidationReport& Report, doub
 		]
 		.SupportsMaximize(false)
 		.SupportsMinimize(true);
+
+	ValidationResultsWindow->SetOnWindowClosed(FOnWindowClosed::CreateLambda([this](const TSharedRef<SWindow>&) 
+		{
+			ValidationResultsWindow.Reset();
+		}));
+
 	FSlateApplication::Get().AddWindow(ValidationResultsWindow.ToSharedRef());
 }
 
 void FAssetVerifier::CreateIssuesWindow(const FAssetValidationReport& Report)
 {
+	if (IssuesViewWindow.IsValid())
+	{
+		IssuesViewWindow->BringToFront(true);
+		return;
+	}
+
 	TArray<TSharedPtr<FAssetValidationData>> DataList;
 
 	for (const auto& FixerData : Report.ValidatorToFixerData)
@@ -266,6 +290,11 @@ void FAssetVerifier::CreateIssuesWindow(const FAssetValidationReport& Report)
 		]
 		.SupportsMaximize(true)
 		.SupportsMinimize(true);
+
+	IssuesViewWindow->SetOnWindowClosed(FOnWindowClosed::CreateLambda([this](const TSharedRef<SWindow>&)
+		{
+			IssuesViewWindow.Reset();
+		}));
 
 	FSlateApplication::Get().AddWindow(IssuesViewWindow.ToSharedRef());
 }
