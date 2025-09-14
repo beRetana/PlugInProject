@@ -11,28 +11,28 @@ class SIssueDisplayView : public SCompoundWidget
 public:
 	SLATE_BEGIN_ARGS(SIssueDisplayView) {}
 		SLATE_ARGUMENT(FOnFixSelected, OnFixSelected)
-		SLATE_ARGUMENT(TArray<DataPtr>, DataList)
+		SLATE_ARGUMENT(TArray<VD::DataPtr>, DataList)
 	SLATE_END_ARGS()
 
 	void Construct(const FArguments& InArgs);
 
-	void SetDataList(const TArray<VD::FAssetValidationData>& NewDataList);
+	void SetDataList(TArray<VD::DataPtr>& NewDataList);
 
 private:
 
-	TSharedRef<ITableRow> GenerateRow(DataPtr DataPtr, const TSharedRef<STableViewBase>& Owner);
+	TSharedRef<ITableRow> GenerateRow(VD::DataPtr DataPtr, const TSharedRef<STableViewBase>& Owner);
 	void ApplyFilter(const FString& FilterKey);
 	void OnSearchKeyChanged(const FText& NewSearchKey);
-	bool ContainsFilterKey(const DataPtr& Data);
+	bool ContainsFilterKey(const VD::DataPtr& Data);
 	FReply OnFixSelectedIssues();
 
 private:
 	const FName RowName_AssetName = TEXT("Asset Name");
 
-	TArray<DataPtr> AllDataList;
-	TArray<DataPtr> FilteredDataList;
+	TArray<VD::DataPtr> AllDataList;
+	TArray<VD::DataPtr> FilteredDataList;
 
-	TSharedPtr<SListView<DataPtr>> ListViewPtr;
+	TSharedPtr<SListView<VD::DataPtr>> ListViewPtr;
 
 	FString CurrentFilterKey;
 

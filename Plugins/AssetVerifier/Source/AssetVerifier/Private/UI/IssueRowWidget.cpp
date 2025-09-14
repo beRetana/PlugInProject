@@ -4,8 +4,8 @@ void SIssueRowWidget::Construct(const FArguments& InArgs, const TSharedRef<STabl
 {
 	ValidationData = InArgs._ValidationData;
 
-	SMultiColumnTableRow<DataPtr>::Construct(
-		SMultiColumnTableRow<DataPtr>::FArguments().Padding(FMargin(1.0f, 1.0f)), Owner);
+	SMultiColumnTableRow<VD::DataPtr>::Construct(
+		SMultiColumnTableRow<VD::DataPtr>::FArguments().Padding(FMargin(1.0f, 1.0f)), Owner);
 }
 
 TSharedRef<SWidget> SIssueRowWidget::GenerateWidgetForColumn(const FName& ColumnName)
@@ -79,4 +79,19 @@ TSharedRef<SWidget> SIssueRowWidget::GenerateWidgetForColumn(const FName& Column
 	}
 
 	return SNullWidget::NullWidget;
+}
+
+FSlateColor SIssueRowWidget::GetResultColor(const VD::EValidationResult& Result)
+{
+	switch (Result)
+	{
+	case VD::EValidationResult::Passed_0:
+		return GreenFontColor;
+	case VD::EValidationResult::Information_1:
+		return BlueFontColor;
+	case VD::EValidationResult::Warning_2:
+		return YellowFontColor;
+	default:
+		return RedFontColor;
+	}
 }

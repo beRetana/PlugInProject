@@ -11,17 +11,17 @@ void FAssetReportGenerator::GenerateReport(VD::FAssetValidationReport& ReportOut
 	{
 		for (auto& issueData : groupData.Value.AllValidationData)
 		{
-			if (!ReportOut.ErrorCountPerAsset.Contains(issueData.Asset->AssetName))
+			if (!ReportOut.ErrorCountPerAsset.Contains(issueData->Asset->AssetName))
 			{
-				ReportOut.ErrorCountPerAsset.Add(issueData.Asset->AssetName, 0);
+				ReportOut.ErrorCountPerAsset.Add(issueData->Asset->AssetName, 0);
 			}
 
-			if (!ReportOut.ErrorCountPerValidator.Contains(issueData.ValidatorName))
+			if (!ReportOut.ErrorCountPerValidator.Contains(issueData->ValidatorName))
 			{
-				ReportOut.ErrorCountPerValidator.Add(issueData.ValidatorName, 0);
+				ReportOut.ErrorCountPerValidator.Add(issueData->ValidatorName, 0);
 			}
 
-			switch (issueData.Result)
+			switch (issueData->Result)
 			{
 			case VD::EValidationResult::Passed_0:
 				++ReportOut.Summary.Passed;
@@ -34,8 +34,8 @@ void FAssetReportGenerator::GenerateReport(VD::FAssetValidationReport& ReportOut
 				break;
 			case VD::EValidationResult::Error_3:
 				++ReportOut.Summary.Errors;
-				++ReportOut.ErrorCountPerAsset[issueData.Asset->AssetName];
-				++ReportOut.ErrorCountPerValidator[issueData.ValidatorName];
+				++ReportOut.ErrorCountPerAsset[issueData->Asset->AssetName];
+				++ReportOut.ErrorCountPerValidator[issueData->ValidatorName];
 				break;
 			}
 		}
@@ -83,11 +83,11 @@ void FAssetReportGenerator::GenerateFullReportToCSV(const TMap<FName, VD::FFixer
 		for (const auto& Data : DataGroup.Value.AllValidationData)
 		{
 			OutCSV += FString::Printf(TEXT("%s,%s,%s,%s,%s\n"),
-				*Data.Asset->AssetName.ToString(),
-				*Data.Asset->GetObjectPathString(),
-				*Data.ValidatorName.ToString(),
-				*Data.ResultString(),
-				*Data.Message);
+				*Data->Asset->AssetName.ToString(),
+				*Data->Asset->GetObjectPathString(),
+				*Data->ValidatorName.ToString(),
+				*Data->ResultString(),
+				*Data->Message);
 		}
 	}
 }
@@ -165,11 +165,11 @@ void FAssetReportGenerator::GenerateFullReportToJSON(const TMap<FName, VD::FFixe
 		for (const auto& AssetData : Fixer.Value.AllValidationData)
 		{
 			OutJSON += TEXT("\t\t\t{\n");
-			OutJSON += FString::Printf(TEXT("\t\t\t\t\"AssetName\": \"%s\",\n"), *AssetData.Asset->AssetName.ToString());
-			OutJSON += FString::Printf(TEXT("\t\t\t\t\"AssetPath\": \"%s\",\n"), *AssetData.Asset->GetObjectPathString());
-			OutJSON += FString::Printf(TEXT("\t\t\t\t\"ValidatorName\": \"%s\",\n"), *AssetData.ValidatorName.ToString());
-			OutJSON += FString::Printf(TEXT("\t\t\t\t\"Result\": \"%s\",\n"), *AssetData.ResultString());
-			OutJSON += FString::Printf(TEXT("\t\t\t\t\"Message\": \"%s\"\n"), *AssetData.Message);
+			OutJSON += FString::Printf(TEXT("\t\t\t\t\"AssetName\": \"%s\",\n"), *AssetData->Asset->AssetName.ToString());
+			OutJSON += FString::Printf(TEXT("\t\t\t\t\"AssetPath\": \"%s\",\n"), *AssetData->Asset->GetObjectPathString());
+			OutJSON += FString::Printf(TEXT("\t\t\t\t\"ValidatorName\": \"%s\",\n"), *AssetData->ValidatorName.ToString());
+			OutJSON += FString::Printf(TEXT("\t\t\t\t\"Result\": \"%s\",\n"), *AssetData->ResultString());
+			OutJSON += FString::Printf(TEXT("\t\t\t\t\"Message\": \"%s\"\n"), *AssetData->Message);
 
 			OutJSON += (AssetDataIndex < Fixer.Value.AllValidationData.Num() - 1 && FixerIndex < ValidationData.Num() - 1) ? TEXT("\t\t\t},\n") : TEXT("\t\t\t}\n");
 			++AssetDataIndex;
@@ -254,11 +254,11 @@ void FAssetReportGenerator::GenerateFullReportToLog(const TMap<FName, VD::FFixer
 		for (const auto& Row : DataGroup.Value.AllValidationData)
 		{
 			OutLog += FString::Printf(TEXT("[%s] | %s | %s |\n"),
-				*Row.ResultString(),
-				*Row.Asset->AssetName.ToString(),
-				*Row.ValidatorName.ToString());
-			OutLog += FString::Printf(TEXT("Asset Path: %s\n"), *Row.Asset->GetObjectPathString());
-			OutLog += FString::Printf(TEXT("Message: %s\n"), *Row.Message);
+				*Row->ResultString(),
+				*Row->Asset->AssetName.ToString(),
+				*Row->ValidatorName.ToString());
+			OutLog += FString::Printf(TEXT("Asset Path: %s\n"), *Row->Asset->GetObjectPathString());
+			OutLog += FString::Printf(TEXT("Message: %s\n"), *Row->Message);
 			OutLog += TEXT("---------------------------------------------------\n");
 		}
 	}

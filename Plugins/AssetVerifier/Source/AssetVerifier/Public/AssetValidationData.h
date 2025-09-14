@@ -2,6 +2,12 @@
 
 namespace VerifierData
 {
+	static FString PASSED() { return TEXT("Passed"); }
+	static FString INFORMATION() { return TEXT("Information"); }
+	static FString WARNING() { return TEXT("Warning"); }
+	static FString ERROR() { return TEXT("Error"); }
+	static FString UNKNOWN() { return TEXT("Unknown"); }
+
 	enum class EValidationResult : uint8
 	{
 		Passed_0 = 0,
@@ -11,11 +17,22 @@ namespace VerifierData
 		Size_4 = 4
 	};
 
-	static FString PASSED(){ return TEXT("Passed"); }
-	static FString INFORMATION() { return TEXT("Information"); }
-	static FString WARNING() { return TEXT("Warning"); }
-	static FString ERROR() { return TEXT("Error"); }
-	static FString UNKNOWN() { return TEXT("Unknown"); }
+	static FString EnumResultToString(const EValidationResult& Result)
+	{
+		switch (Result)
+		{
+		case EValidationResult::Passed_0:
+			return PASSED();
+		case EValidationResult::Information_1:
+			return INFORMATION();
+		case EValidationResult::Warning_2:
+			return WARNING();
+		case EValidationResult::Error_3:
+			return ERROR();
+		default:
+			return UNKNOWN();
+		}
+	}
 
 	struct FAssetValidationData
 	{
@@ -43,24 +60,9 @@ namespace VerifierData
 		{
 			return EnumResultToString(Result);
 		}
-
-		static FString EnumResultToString(const EValidationResult& Result)
-		{
-			switch (Result)
-			{
-			case EValidationResult::Passed_0:
-				return PASSED();
-			case EValidationResult::Information_1:
-				return INFORMATION();
-			case EValidationResult::Warning_2:
-				return WARNING();
-			case EValidationResult::Error_3:
-				return ERROR();
-			default:
-				return UNKNOWN();
-			}
-		}
 	};
+
+	typedef TSharedPtr<FAssetValidationData> DataPtr;
 
 	struct FValidationReportSummary
 	{
@@ -88,11 +90,11 @@ namespace VerifierData
 
 	struct FFixerData
 	{
-		TArray<FAssetValidationData> AllValidationData;
+		TArray<DataPtr> AllValidationData;
 
-		TStaticArray<TArray<FAssetValidationData*>, static_cast<int32>(EValidationResult::Size_4)> ByResultValidationData;
+		TStaticArray<TArray<DataPtr>, static_cast<int32>(EValidationResult::Size_4)> ByResultValidationData;
 
-		TArray<FAssetValidationData*>& operator[](EValidationResult Result)
+		TArray<DataPtr>& operator[](EValidationResult Result)
 		{
 			const int32 StatusIndex = static_cast<int32>(Result);
 			checkf(StatusIndex < static_cast<int32>(EValidationResult::Size_4), TEXT("Tried to fetch value but Index out of bounds"));
@@ -103,8 +105,8 @@ namespace VerifierData
 		{
 			const int32 StatusIndex = static_cast<int32>(ValidationData.Result);
 			checkf(StatusIndex < static_cast<int32>(EValidationResult::Size_4), TEXT("Tried to add a value but Index out of bounds"));
-			int32 DataIndex = AllValidationData.Add(MoveTemp(ValidationData));
-			ByResultValidationData[StatusIndex].Add(&AllValidationData[DataIndex]);
+			int32 DataIndex = AllValidationData.Add(MakeShared<FAssetValidationData>(ValidationData));
+			ByResultValidationData[StatusIndex].Add(AllValidationData[DataIndex]);
 		}
 	};
 

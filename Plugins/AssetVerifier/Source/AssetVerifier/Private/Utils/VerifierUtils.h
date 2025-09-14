@@ -5,7 +5,7 @@
 class FVerifierUtils
 {
 public:
-	static void CleanupRedirector(const TArray<VD::FAssetValidationData*>& ValidationData);
+	static void CleanupRedirector(const TArray<VD::DataPtr>& ValidationData);
 
 	static void SaveDirtyAssets(const TArray<FAssetData>& ValidationData);
 

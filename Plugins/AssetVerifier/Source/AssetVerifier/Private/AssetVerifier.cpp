@@ -251,13 +251,13 @@ void FAssetVerifier::CreateIssuesWindow(const VD::FAssetValidationReport& Report
 		return;
 	}
 
-	TArray<TSharedPtr<VD::FAssetValidationData>> DataList;
+	TArray<VD::DataPtr> DataList;
 
 	for (const auto& FixerData : Report.ValidatorToFixerData)
 	{
 		for (const auto& Issue : FixerData.Value.AllValidationData)
 		{
-			DataList.Add(MakeShared<VD::FAssetValidationData>(Issue));
+			DataList.Add(Issue);
 		}
 	}
 
@@ -301,9 +301,9 @@ void FAssetVerifier::RunFixer()
 		return;
 	}
 	
+	FixerManager->ExecuteAllFixers(CurrentReport);
 	ValidationResultsWindow->RequestDestroyWindow();
 	IssuesViewWindow->RequestDestroyWindow();
-	FixerManager->ExecuteAllFixers(CurrentReport);
 	FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("FixerResult", "Process has been completed successfully!"));
 	FVerifierUtils::SaveDirtyAssets(CurrentReport.Assets);
 	CurrentReport.Reset();

@@ -4,7 +4,7 @@
 #include "SourceControlHelpers.h"
 #include "AssetToolsModule.h"
 
-void FVerifierUtils::CleanupRedirector(const TArray<VD::FAssetValidationData*>& ValidationData)
+void FVerifierUtils::CleanupRedirector(const TArray<VD::DataPtr>& ValidationData)
 {
 	TSet<UObjectRedirector*> RedirectorsToFix;
 

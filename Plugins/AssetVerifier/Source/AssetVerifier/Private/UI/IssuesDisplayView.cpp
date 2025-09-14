@@ -34,7 +34,7 @@ void SIssueDisplayView::Construct(const FArguments& InArgs)
 					.HAlign(EHorizontalAlignment::HAlign_Fill)
 					.Padding(10.0f)
 				[
-					SAssignNew(ListViewPtr, SListView<DataPtr>)
+					SAssignNew(ListViewPtr, SListView<VD::DataPtr>)
 						.ListItemsSource(&FilteredDataList)
 						.OnGenerateRow(this, &SIssueDisplayView::GenerateRow)
 						.SelectionMode(ESelectionMode::Multi)
@@ -66,19 +66,19 @@ void SIssueDisplayView::Construct(const FArguments& InArgs)
 	ApplyFilter(TEXT(""));
 }
 
-TSharedRef<ITableRow> SIssueDisplayView::GenerateRow(DataPtr DataPtr, const TSharedRef<STableViewBase>& Owner)
+TSharedRef<ITableRow> SIssueDisplayView::GenerateRow(VD::DataPtr DataPtr, const TSharedRef<STableViewBase>& Owner)
 {
 	return SNew(SIssueRowWidget, Owner).ValidationData(DataPtr);
 }
 
-void SIssueDisplayView::SetDataList(const TArray<VD::FAssetValidationData>& NewDataList)
+void SIssueDisplayView::SetDataList(TArray<VD::DataPtr>& NewDataList)
 {
 	AllDataList.Reset();
 	AllDataList.Reserve(NewDataList.Num());
 
-	for (const auto& DataItem : NewDataList)
+	for (auto& DataItem : NewDataList)
 	{
-		AllDataList.Add(MakeShared<VD::FAssetValidationData>(DataItem));
+		AllDataList.Add(DataItem);
 	}
 
 	ApplyFilter(CurrentFilterKey);
@@ -96,7 +96,7 @@ void SIssueDisplayView::ApplyFilter(const FString& FilterKey)
 
 	for (const auto& Data : AllDataList)
 	{
-		if (!Data.IsValid()) continue;
+		if (Data == nullptr) continue;
 		if (!ContainsFilterKey(Data)) continue;
 
 		FilteredDataList.Add(Data);
@@ -107,7 +107,7 @@ void SIssueDisplayView::ApplyFilter(const FString& FilterKey)
 	ListViewPtr->RequestListRefresh();
 }
 
-bool SIssueDisplayView::ContainsFilterKey(const DataPtr& Data)
+bool SIssueDisplayView::ContainsFilterKey(const VD::DataPtr& Data)
 {
 	return Data->Asset->AssetName.ToString().Contains(CurrentFilterKey) ||
 		Data->ResultString().Contains(CurrentFilterKey) ||

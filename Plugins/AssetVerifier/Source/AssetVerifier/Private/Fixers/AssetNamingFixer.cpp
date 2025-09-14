@@ -12,6 +12,9 @@ void FAssetNamingFixer::Fix(VD::FFixerData& FixerData)
 	
 	for (auto ValidationData : FixerData[VD::EValidationResult::Error_3])
 	{
+		UE_LOG(LogTemp, Warning, TEXT("%s"), ValidationData->bSelectedFix ? TEXT("PROCESS") : TEXT("SKIP"));
+		if (!ValidationData->bSelectedFix) continue;
+
 		UObject* Asset = ValidationData->Asset->GetAsset();
 		if (Asset == nullptr) continue;
 
