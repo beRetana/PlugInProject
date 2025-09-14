@@ -2,7 +2,7 @@
 #include "Fixers/IAssetFixer.h"
 #include "AssetValidationData.h"
 
-void FFixerManager::ExecuteFixer(const FName& FixerName, FAssetValidationReport& Report)
+void FFixerManager::ExecuteFixer(const FName& FixerName, VD::FAssetValidationReport& Report)
 {
 	if (auto* Fixer = FixersMap.Find(FixerName))
 	{
@@ -20,7 +20,7 @@ void FFixerManager::ExecuteFixer(const FName& FixerName, FAssetValidationReport&
 	}
 }
 
-void FFixerManager::ExecuteFixers(const TArray<FName>& FixerNames, FAssetValidationReport& Report)
+void FFixerManager::ExecuteFixers(const TArray<FName>& FixerNames, VD::FAssetValidationReport& Report)
 {
 	for (const FName& FixerName : FixerNames)
 	{
@@ -28,7 +28,7 @@ void FFixerManager::ExecuteFixers(const TArray<FName>& FixerNames, FAssetValidat
 	}
 }
 
-void FFixerManager::ExecuteAllFixers(FAssetValidationReport& Report)
+void FFixerManager::ExecuteAllFixers(VD::FAssetValidationReport& Report)
 {
 	for (const auto& Fixer : FixersMap)
 	{

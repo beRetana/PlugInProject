@@ -1,9 +1,7 @@
 
 #include "UI/AssetVerifierSettingsWindow.h"
 #include "Widgets/Text/STextBlock.h"
-#include "Widgets/Input/SEditableTextBox.h"
 #include "Widgets/Input/SButton.h"
-#include "AssetVerifierSettings.h"
 
 void SAssetVerifierSettingsWindow::Construct(const FArguments& InArgs)
 {

@@ -1,12 +1,14 @@
 #pragma once
 
-struct FFixerData;
+#include "CoreMinimal.h"
+#include "AssetValidationData.h"
 
 class IAssetFixer
 {
 public:
+
 	virtual ~IAssetFixer() = default;
-	virtual void Fix(FFixerData& Asset) = 0;
+	virtual void Fix(VD::FFixerData& Asset) = 0;
 	virtual FName GetFixerName() const = 0;
 
 protected:

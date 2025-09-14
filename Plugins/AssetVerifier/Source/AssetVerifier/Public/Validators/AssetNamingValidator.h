@@ -12,9 +12,9 @@ public:
 
 	virtual ~FAssetNamingValidator() = default;
 
-	virtual void Validate(const TArray<FAssetData>& Assets, FAssetValidationReport& OutValidationReport) override;
+	virtual void Validate(const TArray<FAssetData>& Assets, VD::FAssetValidationReport& OutValidationReport) override;
 
-	virtual void FillValidationData(const FAssetData& Asset, FAssetValidationData& OutValidationData) override;
+	virtual void FillValidationData(const FAssetData& Asset, VD::FAssetValidationData& OutValidationData) override;
 	
 	virtual void ApplySettings(const FAssetVerifierSettings& Settings) override;
 

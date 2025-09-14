@@ -16,7 +16,7 @@ public:
 
 	void Construct(const FArguments& InArgs);
 
-	void SetDataList(const TArray<FAssetValidationData>& NewDataList);
+	void SetDataList(const TArray<VD::FAssetValidationData>& NewDataList);
 
 private:
 

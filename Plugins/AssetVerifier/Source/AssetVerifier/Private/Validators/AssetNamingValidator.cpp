@@ -8,7 +8,7 @@
 
 const TCHAR* FAssetNamingValidator::ASSET_REGISTRY = TEXT("AssetRegistry");
 
-void FAssetNamingValidator::Validate(const TArray<FAssetData>& Assets, FAssetValidationReport& OutValidationReport)
+void FAssetNamingValidator::Validate(const TArray<FAssetData>& Assets, VD::FAssetValidationReport& OutValidationReport)
 {
 	UE_LOG(LogTemp, Log, TEXT("Checking For Naming Convention On Static Meshes: %s"), *NameConventionPrefix);
 	
@@ -20,7 +20,7 @@ void FAssetNamingValidator::Validate(const TArray<FAssetData>& Assets, FAssetVal
 	for (const FAssetData& asset : Assets)
 	{
 		if (!asset.IsTopLevelAsset() || asset.AssetClassPath.ToString() != StaticClassName) continue;
-		FAssetValidationData ValidationData;
+		VD::FAssetValidationData ValidationData;
 		FillValidationData(asset, ValidationData);
 		OutValidationReport.ValidatorToFixerData.FindOrAdd(GetFixerName()).Add(ValidationData);
 	}
@@ -33,7 +33,7 @@ void FAssetNamingValidator::Validate(const TArray<FAssetData>& Assets, FAssetVal
 	UE_LOG(LogTemp, Log, TEXT("%d Static Meshes were checked"), CheckedAssetsNum);
 }
 
-void FAssetNamingValidator::FillValidationData(const FAssetData& Asset, FAssetValidationData& OutValidationData)
+void FAssetNamingValidator::FillValidationData(const FAssetData& Asset, VD::FAssetValidationData& OutValidationData)
 {
 	OutValidationData.Asset = &Asset;
 	OutValidationData.ValidatorName = GetValidatorName();
@@ -46,7 +46,7 @@ void FAssetNamingValidator::FillValidationData(const FAssetData& Asset, FAssetVa
 
 	if (AssetNameStr.StartsWith(NameConventionPrefix))
 	{
-		OutValidationData.Result = EValidationResult::Passed_0;
+		OutValidationData.Result = VD::EValidationResult::Passed_0;
 		OutValidationData.Message = FString::Printf(
 			TEXT("Asset %s follows naming convention: %s"),
 			*AssetNameStr,
@@ -63,7 +63,7 @@ void FAssetNamingValidator::FillValidationData(const FAssetData& Asset, FAssetVa
 		OutValidationData.FixerName = GetFixerName();
 		OutValidationData.FixData = NameConventionPrefix;
 		OutValidationData.bCanAutoFix = true; 
-		OutValidationData.Result = EValidationResult::Error_3;
+		OutValidationData.Result = VD::EValidationResult::Error_3;
 		OutValidationData.Message = FString::Printf(
 			TEXT("Asset %s does not follow the naming convention: %s"), 
 			*AssetNameStr,

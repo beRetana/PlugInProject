@@ -1,7 +1,7 @@
 
 #include "AssetReportGenerator.h"
 
-void FAssetReportGenerator::GenerateReport(FAssetValidationReport& ReportOut)
+void FAssetReportGenerator::GenerateReport(VD::FAssetValidationReport& ReportOut)
 {
 	ReportOut.ErrorCountPerAsset.Empty();
 	ReportOut.ErrorCountPerValidator.Empty();
@@ -23,16 +23,16 @@ void FAssetReportGenerator::GenerateReport(FAssetValidationReport& ReportOut)
 
 			switch (issueData.Result)
 			{
-			case EValidationResult::Passed_0:
+			case VD::EValidationResult::Passed_0:
 				++ReportOut.Summary.Passed;
 				break;
-			case EValidationResult::Information_1:
+			case VD::EValidationResult::Information_1:
 				++ReportOut.Summary.Information;
 				break;
-			case EValidationResult::Warning_2:
+			case VD::EValidationResult::Warning_2:
 				++ReportOut.Summary.Warnings;
 				break;
-			case EValidationResult::Error_3:
+			case VD::EValidationResult::Error_3:
 				++ReportOut.Summary.Errors;
 				++ReportOut.ErrorCountPerAsset[issueData.Asset->AssetName];
 				++ReportOut.ErrorCountPerValidator[issueData.ValidatorName];
@@ -44,14 +44,14 @@ void FAssetReportGenerator::GenerateReport(FAssetValidationReport& ReportOut)
 	ReportOut.Summary.TotalAssets = ReportOut.ErrorCountPerAsset.Num();
 }
 
-FAssetValidationReport FAssetReportGenerator::GenerateReport()
+VD::FAssetValidationReport FAssetReportGenerator::GenerateReport()
 {
-	FAssetValidationReport Report;
+	VD::FAssetValidationReport Report;
 	GenerateReport(Report);
 	return Report;
 }
 
-void FAssetReportGenerator::ToCSV(const FAssetValidationReport& ValidationReport, FString& OutCSV)
+void FAssetReportGenerator::ToCSV(const VD::FAssetValidationReport& ValidationReport, FString& OutCSV)
 {
 	OutCSV.Empty();
 
@@ -62,10 +62,9 @@ void FAssetReportGenerator::ToCSV(const FAssetValidationReport& ValidationReport
 	GenerateErrorsPerAssetToCSV(ValidationReport.ErrorCountPerAsset, OutCSV);
 	OutCSV += TEXT("END\n");
 	GenerateErrorsPerValidatorToCSV(ValidationReport.ErrorCountPerValidator, OutCSV);
-	
 }
 
-void FAssetReportGenerator::GenerateSummaryReportToCSV(const FValidationReportSummary& Summary, FString& OutCSV)
+void FAssetReportGenerator::GenerateSummaryReportToCSV(const VD::FValidationReportSummary& Summary, FString& OutCSV)
 {
 	OutCSV += TEXT("Summary Stats, Count\n");
 	OutCSV += FString::Printf(TEXT("Total Assets,%d\n"), Summary.TotalAssets);
@@ -75,7 +74,7 @@ void FAssetReportGenerator::GenerateSummaryReportToCSV(const FValidationReportSu
 	OutCSV += FString::Printf(TEXT("Total Passed,%d\n"), Summary.Passed);
 }
 
-void FAssetReportGenerator::GenerateFullReportToCSV(const TMap<FName, FFixerData>& ValidationData, FString& OutCSV)
+void FAssetReportGenerator::GenerateFullReportToCSV(const TMap<FName, VD::FFixerData>& ValidationData, FString& OutCSV)
 {
 	OutCSV += TEXT("Asset Name,Asset Path,Validator Name,Result,Message\n");
 
@@ -111,14 +110,14 @@ void FAssetReportGenerator::GenerateErrorsPerValidatorToCSV(const TMap<FName, in
 	}
 }
 
-FString FAssetReportGenerator::ToCSV(const FAssetValidationReport& ValidationReport)
+FString FAssetReportGenerator::ToCSV(const VD::FAssetValidationReport& ValidationReport)
 {
 	FString CSV;
 	ToCSV(ValidationReport, CSV);
 	return CSV;
 }
 
-void FAssetReportGenerator::ToJSON(const FAssetValidationReport& Report, FString& OutJSON)
+void FAssetReportGenerator::ToJSON(const VD::FAssetValidationReport& Report, FString& OutJSON)
 {
 	OutJSON.Empty();
 	
@@ -141,7 +140,7 @@ void FAssetReportGenerator::ToJSON(const FAssetValidationReport& Report, FString
 	OutJSON += TEXT("}\n");					   // End of JSON
 }
 
-void FAssetReportGenerator::GenerateSummaryReportToJSON(const FValidationReportSummary& Summary, FString& OutJSON)
+void FAssetReportGenerator::GenerateSummaryReportToJSON(const VD::FValidationReportSummary& Summary, FString& OutJSON)
 {
 	OutJSON += TEXT("\t\"SummaryReport\":\n"); 
 	OutJSON += TEXT("\t{\n");
@@ -153,7 +152,7 @@ void FAssetReportGenerator::GenerateSummaryReportToJSON(const FValidationReportS
 	OutJSON += TEXT("\t}");
 }
 
-void FAssetReportGenerator::GenerateFullReportToJSON(const TMap<FName, FFixerData>& ValidationData, FString& OutJSON)
+void FAssetReportGenerator::GenerateFullReportToJSON(const TMap<FName, VD::FFixerData>& ValidationData, FString& OutJSON)
 {
 	OutJSON += TEXT("\t\"FullReport\":\n");
 	OutJSON += TEXT("\t\t[\n");
@@ -220,14 +219,14 @@ void FAssetReportGenerator::GenerateErrorsPerValidatorToJSON(const TMap<FName, i
 	OutJSON += TEXT("\t\t]");
 }
 
-FString FAssetReportGenerator::ToJSON(const FAssetValidationReport& Report)
+FString FAssetReportGenerator::ToJSON(const VD::FAssetValidationReport& Report)
 {
 	FString JSON;
 	ToJSON(Report, JSON);
 	return JSON;
 }
 
-void FAssetReportGenerator::ToLog(const FAssetValidationReport& Report, FString& OutLog)
+void FAssetReportGenerator::ToLog(const VD::FAssetValidationReport& Report, FString& OutLog)
 {
 	OutLog += TEXT(" \n============= Asset Validation Report =============\n\n");
 	GenerateSummaryReportToLog(Report.Summary, OutLog);
@@ -237,7 +236,7 @@ void FAssetReportGenerator::ToLog(const FAssetValidationReport& Report, FString&
 	OutLog += TEXT(" \n===================================================\n");
 }
 
-void FAssetReportGenerator::GenerateSummaryReportToLog(const FValidationReportSummary& Summary, FString& OutLog)
+void FAssetReportGenerator::GenerateSummaryReportToLog(const VD::FValidationReportSummary& Summary, FString& OutLog)
 {
 	OutLog += TEXT(" \n--------------------Summary------------------------\n\n");
 	OutLog += FString::Printf(TEXT("Total Assets: %d\n"), Summary.TotalAssets);
@@ -247,7 +246,7 @@ void FAssetReportGenerator::GenerateSummaryReportToLog(const FValidationReportSu
 	OutLog += FString::Printf(TEXT("Total Information: %d\n\n"), Summary.Information);
 }
 
-void FAssetReportGenerator::GenerateFullReportToLog(const TMap<FName, FFixerData>& ValidationData, FString& OutLog)
+void FAssetReportGenerator::GenerateFullReportToLog(const TMap<FName, VD::FFixerData>& ValidationData, FString& OutLog)
 {
 	OutLog += TEXT(" \n------------------Full Report----------------------\n\n");
 	for (const auto& DataGroup : ValidationData)
@@ -283,14 +282,14 @@ void FAssetReportGenerator::GenerateErrorsPerValidatorToLog(const TMap<FName, in
 	}
 }
 
-FString FAssetReportGenerator::ToLog(const FAssetValidationReport& Report)
+FString FAssetReportGenerator::ToLog(const VD::FAssetValidationReport& Report)
 {
 	FString Log;
 	ToLog(Report, Log);
 	return Log;
 }
 
-bool FAssetReportGenerator::StreamSmallReportToLog(const FAssetValidationReport& Report)
+bool FAssetReportGenerator::StreamSmallReportToLog(const VD::FAssetValidationReport& Report)
 {
 	FString Log;
 	ToLog(Report, Log);
@@ -298,7 +297,7 @@ bool FAssetReportGenerator::StreamSmallReportToLog(const FAssetValidationReport&
 	return true;
 }
 
-bool FAssetReportGenerator::SaveSmallReportToCSVFile(const FAssetValidationReport& Report)
+bool FAssetReportGenerator::SaveSmallReportToCSVFile(const VD::FAssetValidationReport& Report)
 {
 	FString Directory = FPaths::ProjectSavedDir() / TEXT("Reports/CSVs");
 
@@ -352,7 +351,7 @@ bool FAssetReportGenerator::SaveStringAtomicallyToFile(const FString& Content, c
 	return true;
 }
 
-bool FAssetReportGenerator::SaveSmallReportToJSONFile(const FAssetValidationReport& Report)
+bool FAssetReportGenerator::SaveSmallReportToJSONFile(const VD::FAssetValidationReport& Report)
 {
 	FString Directory = FPaths::ProjectSavedDir() / TEXT("Reports/JSONs");
 

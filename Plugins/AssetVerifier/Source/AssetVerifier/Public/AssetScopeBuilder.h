@@ -1,11 +1,8 @@
 #pragma once
 
-class IAssetRegistry; // Forward declaration since we are using it in the class declaration
-
 class FAssetScopeBuilder
 {
 public:
-
 	static TArray<FAssetData> BuildScopeAll();
 	static void BuildScopeAll(TArray<FAssetData>& OutAssets);
 
@@ -20,8 +17,8 @@ public:
 	static TArray<FAssetData> QueryAssets(const FARFilter& Filter);
 
 private:
-
-	static IAssetRegistry& GetAssetRegistry();
+	
+	static class IAssetRegistry& GetAssetRegistry();
 
 	static inline const TCHAR* ASSET_REGISTRY_MODULE = TEXT("AssetRegistry");
 	static inline const TCHAR* GAME_ROOT_PATH = TEXT("/Game");

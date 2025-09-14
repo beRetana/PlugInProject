@@ -2,17 +2,14 @@
 #include "CoreMinimal.h"
 #include "Fixers/IAssetFixer.h"
 
-class FAssetVerifierSettings;
-struct FAssetValidationReport;
-
 class FFixerManager
 {
 public:
 
-	void ExecuteFixer(const FName& FixerName, FAssetValidationReport& Report);
-	void ExecuteFixers(const TArray<FName>& FixerNames, FAssetValidationReport& Report);
-	void ExecuteAllFixers(FAssetValidationReport& Report);
-	void ApplySettings(const FAssetVerifierSettings& Settings);
+	void ExecuteFixer(const FName& FixerName, VD::FAssetValidationReport& Report);
+	void ExecuteFixers(const TArray<FName>& FixerNames, VD::FAssetValidationReport& Report);
+	void ExecuteAllFixers(VD::FAssetValidationReport& Report);
+	void ApplySettings(const class FAssetVerifierSettings& Settings);
 
 	template<typename TFixer, typename... TArgs>
 	void RegisterFixer(const FName& FixerName, TArgs&&... Arguments)

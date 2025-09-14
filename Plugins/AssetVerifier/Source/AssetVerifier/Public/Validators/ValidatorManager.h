@@ -2,17 +2,16 @@
 
 #include "CoreMinimal.h"
 #include "Validators/IAssetValidator.h"
-
-struct FAssetValidationReport;
-struct FAssetData;
+#include "AssetVerifierSettings.h"
+#include "AssetValidationData.h"
 
 class FValidatorManager
 {
 public:
 
-	void ExecuteValidator(const FName& ValidatorName, const TArray<FAssetData>& Assets, FAssetValidationReport& ValidationReport);
-	void ExecuteValidators(const TArray<FName>& ValidatorsName, const TArray<FAssetData>& Assets, FAssetValidationReport& ValidationReport);
-	void ApplySettings(const class FAssetVerifierSettings& Settings);
+	void ExecuteValidator(const FName& ValidatorName, const TArray<FAssetData>& Assets, VD::FAssetValidationReport& ValidationReport);
+	void ExecuteValidators(const TArray<FName>& ValidatorsName, const TArray<FAssetData>& Assets, VD::FAssetValidationReport& ValidationReport);
+	void ApplySettings(const FAssetVerifierSettings& Settings);
 
 	template<typename TValidator, typename... TArgs>
 	void RegisterValidator(const FName& ValidatorName, TArgs&&... Arguments)

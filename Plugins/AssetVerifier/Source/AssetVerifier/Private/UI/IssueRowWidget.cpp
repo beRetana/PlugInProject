@@ -24,7 +24,7 @@ TSharedRef<SWidget> SIssueRowWidget::GenerateWidgetForColumn(const FName& Column
 		return SNew(SBox).Padding(5).VAlign(VAlign_Center).HAlign(HAlign_Left)
 			[
 				SNew(STextBlock).Text(FText::FromString(ValidationData->ResultString()))
-					.ColorAndOpacity(RedFontColor)
+					.ColorAndOpacity(GetResultColor(ValidationData->Result))
 			];
 	}
 

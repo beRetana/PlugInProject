@@ -2,10 +2,8 @@
 
 #include "AssetVerifier.h"
 
-#include "Validators/ValidatorManager.h"
 #include "Validators/AssetNamingValidator.h"
 
-#include "Fixers/FixerManager.h"
 #include "Fixers/AssetNamingFixer.h"
 
 #include "Reporting/AssetReportGenerator.h"
@@ -16,8 +14,6 @@
 
 #include "Utils/VerifierUtils.h"
 
-#include "AssetVerifierSettings.h"
-#include "AssetValidationData.h"
 #include "AssetScopeBuilder.h"
 #include "AssetVerifierCommands.h"
 #include "Misc/MessageDialog.h"
@@ -117,15 +113,6 @@ void FAssetVerifier::SetUpUI()
 	));
 }
 
-void FAssetVerifier::SetUpValidationData(TArray<TArray<FAssetValidationData>>& OutData)
-{
-	OutData.SetNum(static_cast<int32>(EValidationResult::Size_4));
-	OutData[static_cast<int32>(EValidationResult::Error_3)]			= TArray<FAssetValidationData>();
-	OutData[static_cast<int32>(EValidationResult::Warning_2)]		= TArray<FAssetValidationData>();
-	OutData[static_cast<int32>(EValidationResult::Information_1)]	= TArray<FAssetValidationData>();
-	OutData[static_cast<int32>(EValidationResult::Passed_0)]		= TArray<FAssetValidationData>();
-}
-
 /// <summary>
 /// Create a section for Actions in the submenu and add commands
 /// </summary>
@@ -211,7 +198,7 @@ void FAssetVerifier::OpenSettingsWindow()
 	FSlateApplication::Get().AddWindow(SettingsWindowUI.ToSharedRef());
 }
 
-void FAssetVerifier::ShowReportWindow(const FAssetValidationReport& Report, double TimeElapsed)
+void FAssetVerifier::ShowReportWindow(const VD::FAssetValidationReport& Report, double TimeElapsed)
 { 
 	auto SaveToCSV = FSimpleDelegate::CreateLambda([Report]()
 		{
@@ -256,7 +243,7 @@ void FAssetVerifier::ShowReportWindow(const FAssetValidationReport& Report, doub
 	FSlateApplication::Get().AddWindow(ValidationResultsWindow.ToSharedRef());
 }
 
-void FAssetVerifier::CreateIssuesWindow(const FAssetValidationReport& Report)
+void FAssetVerifier::CreateIssuesWindow(const VD::FAssetValidationReport& Report)
 {
 	if (IssuesViewWindow.IsValid())
 	{
@@ -264,13 +251,13 @@ void FAssetVerifier::CreateIssuesWindow(const FAssetValidationReport& Report)
 		return;
 	}
 
-	TArray<TSharedPtr<FAssetValidationData>> DataList;
+	TArray<TSharedPtr<VD::FAssetValidationData>> DataList;
 
 	for (const auto& FixerData : Report.ValidatorToFixerData)
 	{
 		for (const auto& Issue : FixerData.Value.AllValidationData)
 		{
-			DataList.Add(MakeShared<FAssetValidationData>(Issue));
+			DataList.Add(MakeShared<VD::FAssetValidationData>(Issue));
 		}
 	}
 

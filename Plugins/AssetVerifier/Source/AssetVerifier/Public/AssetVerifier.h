@@ -3,8 +3,9 @@
 #pragma once
 
 #include "AssetValidationData.h"
-
-class SWindow;
+#include "Validators/ValidatorManager.h"
+#include "Fixers/FixerManager.h"
+#include "AssetVerifierSettings.h"
 
 class FAssetVerifier : public IModuleInterface
 {
@@ -22,21 +23,20 @@ private:
 	void SetUpDependencies();
 	void MapCommands();
 	void SetUpUI();
-	void SetUpValidationData(TArray<TArray<FAssetValidationData>>& OutData);
-	void ShowReportWindow(const FAssetValidationReport& Report, double TimeElapsed);
+	void ShowReportWindow(const VD::FAssetValidationReport& Report, double TimeElapsed);
 	void OpenSettingsWindow();
-	void CreateIssuesWindow(const FAssetValidationReport& Report);
+	void CreateIssuesWindow(const VD::FAssetValidationReport& Report);
 	void RunValidator(const FName& ValidatorName);
 	void RunFixer();
 	void PopulateCommands(UToolMenu* InMenu);
 
 private:
-	FAssetValidationReport CurrentReport;
+	VD::FAssetValidationReport CurrentReport;
 
 	TSharedPtr<FUICommandList> Commands;
-	TSharedPtr<class FValidatorManager> ValidatorManager;
-	TSharedPtr<class FFixerManager> FixerManager;
-	TSharedPtr<class FAssetVerifierSettings> VerifierSettings;
+	TSharedPtr<FValidatorManager> ValidatorManager;
+	TSharedPtr<FFixerManager> FixerManager;
+	TSharedPtr<FAssetVerifierSettings> VerifierSettings;
 	TSharedPtr<SWindow> SettingsWindowUI;
 	TSharedPtr<SWindow> ValidationResultsWindow;
 	TSharedPtr<SWindow> IssuesViewWindow;

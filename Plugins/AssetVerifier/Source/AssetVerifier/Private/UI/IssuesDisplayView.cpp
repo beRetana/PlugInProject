@@ -71,14 +71,14 @@ TSharedRef<ITableRow> SIssueDisplayView::GenerateRow(DataPtr DataPtr, const TSha
 	return SNew(SIssueRowWidget, Owner).ValidationData(DataPtr);
 }
 
-void SIssueDisplayView::SetDataList(const TArray<FAssetValidationData>& NewDataList)
+void SIssueDisplayView::SetDataList(const TArray<VD::FAssetValidationData>& NewDataList)
 {
 	AllDataList.Reset();
 	AllDataList.Reserve(NewDataList.Num());
 
 	for (const auto& DataItem : NewDataList)
 	{
-		AllDataList.Add(MakeShared<FAssetValidationData>(DataItem));
+		AllDataList.Add(MakeShared<VD::FAssetValidationData>(DataItem));
 	}
 
 	ApplyFilter(CurrentFilterKey);

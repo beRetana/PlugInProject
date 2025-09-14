@@ -1,23 +1,22 @@
 #include "Utils/VerifierUtils.h"
-#include "AssetValidationData.h"
 #include "FileHelpers.h"
 #include "AssetRegistry/AssetData.h"
 #include "SourceControlHelpers.h"
 #include "AssetToolsModule.h"
 
-void FVerifierUtils::CleanupRedirector(const TArray<FAssetValidationData>& ValidationData)
+void FVerifierUtils::CleanupRedirector(const TArray<VD::FAssetValidationData*>& ValidationData)
 {
 	TSet<UObjectRedirector*> RedirectorsToFix;
 
 	const FTopLevelAssetPath RedirectorClassPath = UObjectRedirector::StaticClass()->GetClassPathName();
 
-	for (const auto& AssetData: ValidationData)
+	for (const auto AssetData: ValidationData)
 	{
-		if (!AssetData.Asset->IsValid()) continue;
+		if (!AssetData->Asset->IsValid()) continue;
 
-		if (AssetData.Asset->AssetClassPath != RedirectorClassPath) continue;
+		if (AssetData->Asset->AssetClassPath != RedirectorClassPath) continue;
 
-		if (UObject* Asset = AssetData.Asset->GetAsset())
+		if (UObject* Asset = AssetData->Asset->GetAsset())
 		{
 			if (auto* Redirector = Cast<UObjectRedirector>(Asset))
 			{
@@ -26,7 +25,10 @@ void FVerifierUtils::CleanupRedirector(const TArray<FAssetValidationData>& Valid
 		}
 	}
 
-	if (RedirectorsToFix.Num() <= 0) return;
+	if (RedirectorsToFix.Num() <= 0) 
+	{
+		return;
+	}
 	
 	FAssetToolsModule& AssetToolsModule = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools");
 	AssetToolsModule.Get().FixupReferencers(RedirectorsToFix.Array());

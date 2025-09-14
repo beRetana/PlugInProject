@@ -1,10 +1,7 @@
 
 #include "Validators/ValidatorManager.h"
-#include "Validators/IAssetValidator.h"
-#include "AssetValidationData.h"
-#include "AssetVerifierSettings.h"
 
-void FValidatorManager::ExecuteValidator(const FName& ValidatorName, const TArray<FAssetData>& Assets, FAssetValidationReport& ValidationReport)
+void FValidatorManager::ExecuteValidator(const FName& ValidatorName, const TArray<FAssetData>& Assets, VD::FAssetValidationReport& ValidationReport)
 {
 	if (TUniquePtr<IAssetValidator>* Validator = ValidatorsMap.Find(ValidatorName))
 	{
@@ -23,7 +20,7 @@ void FValidatorManager::ExecuteValidator(const FName& ValidatorName, const TArra
 	}
 }
 
-void FValidatorManager::ExecuteValidators(const TArray<FName>& ValidatorsName, const TArray<FAssetData>& Assets, FAssetValidationReport& ValidationReport)
+void FValidatorManager::ExecuteValidators(const TArray<FName>& ValidatorsName, const TArray<FAssetData>& Assets, VD::FAssetValidationReport& ValidationReport)
 {
 	for (const auto& ValidatorName : ValidatorsName)
 	{

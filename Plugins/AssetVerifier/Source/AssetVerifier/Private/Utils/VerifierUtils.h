@@ -1,12 +1,11 @@
 #pragma once
 
-struct FAssetData;
-struct FAssetValidationData;
+#include "AssetValidationData.h"
 
 class FVerifierUtils
 {
 public:
-	static void CleanupRedirector(const TArray<FAssetValidationData>& ValidationData);
+	static void CleanupRedirector(const TArray<VD::FAssetValidationData*>& ValidationData);
 
 	static void SaveDirtyAssets(const TArray<FAssetData>& ValidationData);
 
