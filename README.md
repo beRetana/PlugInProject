@@ -11,6 +11,20 @@ Its goal is to enforce quality standards and consistency in large projects, insp
 
 ---
 
+## Demo Videos
+
+> [!Note]
+> This video shows how the plug-in can be used to fix naming conventions!
+
+[![Video Demo](https://img.youtube.com/vi/0AxqsjTn1OA/0.jpg)](https://www.youtube.com/watch?v=0AxqsjTn1OA)
+
+> [!Note]
+> This video shows how the plug-in exports reports into various formats!
+
+[![Video Demo](https://img.youtube.com/vi/HZARlAZU9Og/0.jpg)](https://www.youtube.com/watch?v=HZARlAZU9Og)
+
+---
+
 ## Features
 - **Configurable Validators** (naming conventions, LODs, compression, etc.)  
 - **Automatic Fixers** for common issues  
