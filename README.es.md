@@ -11,6 +11,22 @@ Su objetivo es mantener estándares de calidad y consistencia en proyectos grand
 
 ---
 
+## Demo Videos
+
+> [!Note]
+> ¡Haz click para ver como el plug-in puede ser usado para resolver convenciones de nombre!
+
+[![Video Demo](https://img.youtube.com/vi/0AxqsjTn1OA/0.jpg)](https://www.youtube.com/watch?v=0AxqsjTn1OA)
+
+> [!Note]
+> ¡El video muestra como el plug-in exporta reportes en varios formatos!
+
+[![Video Demo](https://img.youtube.com/vi/HZARlAZU9Og/0.jpg)](https://www.youtube.com/watch?v=HZARlAZU9Og)
+
+---
+
+
+
 ## Funcionalidades
 
 **Validadores** configurables (nombres, LODs, compresión, etc.)
