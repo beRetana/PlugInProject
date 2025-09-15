@@ -24,7 +24,7 @@ Its goal is to enforce quality standards and consistency in large projects, insp
 1. Clone or download this repository into your Unreal project’s `Plugins/` folder:
 
     ```
-    git clone https://github.com/youruser/AssetVerifier.git Plugins/AssetVerifier
+    git clone https://github.com/beRetana/PlugInProject.git
     ```
 2. Open the project in Unreal Engine 5.6+.
 3. Enable the plugin in Edit → Plugins → Other → AssetVerifier.
