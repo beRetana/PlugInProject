@@ -1,7 +1,15 @@
 # AssetVerifier – Unreal Engine Asset Validation Plugin 
 
-**AssetVerifier** es un plugin para Unreal Engine 5.6+ que valida y corrige automáticamente los assets del Content Browser.
+> [!NOTE]
+> Disclaimer: Este proyecto esta bajo el nombre de "PlugInProject" porque es bajo desarrollo una vez este publicado se llamará "AssetVerifier."
+
+> [!TIP]
+> Este documento también esta en [English](README.md).
+
+**AssetVerifier** es un plugin para **Unreal Engine 5.6+** que valida y corrige automáticamente los assets del Content Browser.
 Su objetivo es mantener estándares de calidad y consistencia en proyectos grandes, inspirado en frameworks de validación usados en estudios AAA.
+
+---
 
 ## Funcionalidades
 
@@ -11,17 +19,21 @@ Su objetivo es mantener estándares de calidad y consistencia en proyectos grand
 **Scopes** flexibles: todos los assets, por carpeta o selección actual
 **Interfaz** en el Editor para ejecutar validadores y personalizar reglas
 
+---
+
 ## Instalación
 
-1. Descarga o clona este repositorio en la carpeta Plugins/ de tu proyecto Unreal:
+1. Descarga o clona este repositorio en la carpeta `Plugins/` de tu proyecto Unreal:
 
-    ```
-    git clone https://github.com/tuusuario/AssetVerifier.git Plugins/AssetVerifier
-    ```
+```
+git clone https://github.com/beRetana/PlugInProject.git
+```
 
 2. Abre el proyecto en Unreal Engine 5.6+.
 3. Activa el plugin desde Edit → Plugins → Other → AssetVerifier.
 4. Reinicia el editor.
+
+---
 
 ## Uso
 1. Abre el menú Asset Verification en la barra de herramientas del Editor.
@@ -34,18 +46,33 @@ Ejemplo de flujo:
 Run Validator → Run Fixer → Auto-Revalidate → Generate Report
 ```
 
+---
+
 ## Estructura del Proyecto
-```
-AssetVerifier/
-│── Source/
-│   ├── AssetVerifier/               # Módulo principal
-│   ├── Public/                      # Headers públicos
-│   └── Private/                     # Implementación interna
-│
-│── Resources/                       # Íconos/UI
-│── Config/                          # Configuración del plugin
-│── AssetVerifier.uplugin            # Descriptor del plugin
-```
+
+- `Plugin/`
+  - `AssetVerifier/`
+    - `Resources/` (Icons, resources, plugin assets)
+    - `Source/`
+      - `AssetVerifier/`
+        - `Private/` (Implementation files)
+          - `Fixers/` (Automatic asset fixers)
+          - `Reporting/` (Report generation logic)
+          - `UI/` (Slate UI windows & widgets)
+          - `Utils/` (Helper utilities)
+          - `Validators/` (Asset validation rules)
+          - *(other core .cpp files: managers, settings, commands, scope builder)*
+        - `Public/` (Exposed plugin APIs)
+          - `Fixers/` (Fixer interfaces & headers)
+          - `UI/` (Public widget & window headers)
+          - `Validators/` (Validator interfaces & headers)
+          - *(core public headers: settings, data, commands, etc.)*
+        - `AssetVerifier.Build.cs` (Build script)
+    - `AssetVerifier.uplugin` (Plugin descriptor)
+- `Saved/` (Generated reports: CSV, JSON)
+- `AssetVerifier.uplugin` (Project descriptor)
+
+---
 
 ## Desarrollo
 - Lenguaje: C++ (UE5.6)
@@ -59,16 +86,12 @@ AssetVerifier/
 - Fixers adicionales (texturas, materiales)
 - Soporte multiusuario (Perforce/Source Control)
 
-## Contribución
-Este proyecto tiene la meta de servir como pieza de portafolio para poder demonstrar mis habilidades como programador
-
 ## Autor
 Brandon Retana
 
 UCI – Game Design & Interactive Media + Data Science
 
-Tools & Systems Programmer
+Tools & Gameplay Programmer [LinkedIn](https://www.linkedin.com/in/brandon-retana-3a7003295/)
 
-[LinkedIn](https://www.linkedin.com/in/brandon-retana-3a7003295/)
-
-Licencia: MIT – libre uso y modificación.
+> [!Warning]
+> Este proyecto tiene el objetivo de ser usado para mi portafolio personal por lo cual las contribuciones no están permitidas.
