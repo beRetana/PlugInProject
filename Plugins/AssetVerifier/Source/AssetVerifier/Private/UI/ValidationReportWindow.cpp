@@ -27,7 +27,7 @@ void SValidationResultWindow::Construct(const FArguments& InArgs)
 			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(0,5.0f,0,0)
 			[
 				SNew(SButton)
-					.Text(FText::FromString(TEXT("Fix Issues")))
+					.Text(FText::FromString(TEXT("Resolve Issues")))
 					.OnClicked(this, &SValidationResultWindow::HandleIssuesWindow)
 					.Visibility(GetVisibility())
 			]
